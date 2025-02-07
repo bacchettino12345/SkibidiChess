@@ -17,7 +17,7 @@ export class PhysicalBoard
     virtualBoard = null;
 
 
-    HoveredPiece = null;
+    hoveredSquare = null;
     selectedSquare = null;
 
     HighlightedSquares = []
@@ -31,6 +31,8 @@ export class PhysicalBoard
 
 
     animationMenager = null;
+
+    hoveredLegalMoves = []
 
 
     constructor(virtualBoard)
@@ -61,7 +63,7 @@ export class PhysicalBoard
     {
         const rect = this.boardElement.getBoundingClientRect();
 
-        const x = event.clientX - rect.left ;
+        const x = event.clientX - rect.left ;2
         const y = event.clientY - rect.top ;
 
         let clickedSquare = Helper.coordsToIndex(x, y, this.squareWidth, this.squareHeight);
@@ -83,7 +85,7 @@ export class PhysicalBoard
                 let endCoords = Helper.to2D(clickedSquare);
 
 
-                this.startPieceMoveAnimation(this.virtualBoard.pieces[this.selectedSquare], startCoords[1], startCoords[0], endCoords[1], endCoords[0], 300 );
+                this.startPieceMoveAnimation(this.virtualBoard.pieces[this.selectedSquare], startCoords[1], startCoords[0], endCoords[1], endCoords[0], 200 );
 
 
                 this.HighlightedSquares.push(clickedSquare);
@@ -108,7 +110,7 @@ export class PhysicalBoard
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
 
-        this.HoverPiece(Helper.coordsToIndex(x, y, this.squareWidth, this.squareHeight));
+        this.hoverSquare(Helper.coordsToIndex(x, y, this.squareWidth, this.squareHeight));        
     }
 
     LoadSprites()
@@ -123,15 +125,13 @@ export class PhysicalBoard
     }
     
 
-    RenderBoard()
+    RenderBoard(radius, legalMove)
     {
         this.drawBoard();
         this.drawBoardCoords();
-        this.drawPossibleMoves();
+        this.drawPossibleMoves(radius, legalMove);
         this.HighlightSquare();
         this.drawPieces();
-
-        let endTime = performance.now();
     }
 
 
@@ -160,7 +160,7 @@ export class PhysicalBoard
         }
     }
 
-    drawPossibleMoves()
+    drawPossibleMoves(radius, legalMove2)
     {
         if(this.selectedSquare !== null)
         {
@@ -168,7 +168,14 @@ export class PhysicalBoard
             {
                 let legalMoveCoords = Helper.to2D(legalMove);
 
-                if(this.virtualBoard.getPieceAt(legalMove) === null)
+                if(legalMove === legalMove2)
+                {
+                    this.ctx.beginPath();
+                    this.ctx.arc(legalMoveCoords[1] * this.squareWidth + (this.squareWidth / 2), legalMoveCoords[0] * this.squareHeight + (this.squareHeight / 2), radius, 0, 2 * Math.PI );
+                    this.ctx.fillStyle = this.highlightLegalMovesColor;
+                    this.ctx.fill();
+                }
+                else if(this.virtualBoard.getPieceAt(legalMove) === null)
                 {
                     this.ctx.beginPath();
                     this.ctx.arc(legalMoveCoords[1] * this.squareWidth + (this.squareWidth / 2), legalMoveCoords[0] * this.squareHeight + (this.squareHeight / 2), 15, 0, 2 * Math.PI );
@@ -219,23 +226,32 @@ export class PhysicalBoard
         }
     }
 
-    HoverPiece(SquareIndex)
-    {  
+    hoverSquare(squareIndex) {
         
-        if(this.HoveredPiece !== null && this.HoveredPiece !== SquareIndex)
+        if(this.hoveredSquare !== null && this.hoveredSquare !== squareIndex)
             this.RenderBoard();
 
-        let position = Helper.to2D(SquareIndex)
+        let position = Helper.to2D(squareIndex)
 
-        if(this.virtualBoard.getPieceAt(SquareIndex) !== null && this.HoveredPiece !== SquareIndex)
+
+        if( this.lastHoveredSquare !== squareIndex)
+        {
+            this.startLegalMovesAnimation(squareIndex, 15, 30, 1000)
+            this.lastHoveredSquare = squareIndex;
+        }
+
+        if(this.virtualBoard.getPieceAt(squareIndex) !== null && this.hoveredSquare !== squareIndex)
         {
             this.ctx.strokeStyle = "rgb(255, 255, 255)";
             this.ctx.lineWidth = 3;
             this.ctx.strokeRect(position[1] * this.squareWidth, position[0] * this.squareHeight, this.squareWidth, this.squareHeight); 
         }   
 
-        this.HoveredPiece = SquareIndex;      
-    }   
+
+        this.hoveredSquare = squareIndex;
+        
+        console.log(this.hoveredSquare)
+    }
 
     HighlightSquare()
     {
@@ -260,7 +276,6 @@ export class PhysicalBoard
             this.selectedSquare = null;
         }
     }
-
 
     startPieceMoveAnimation(piece, startX, startY, endX, endY, duration = 300)
     {
@@ -299,8 +314,34 @@ export class PhysicalBoard
     }   
 
 
+    startLegalMovesAnimation(LegalMove, startRadius, EndRadius, duration = 300)
+    {
+        const anim = new SimpleAnimation({
+            duration, 
+
+            onUpdate: (progress) => {
+                anim.isPlaying = true;
+
+                let currentRadius = startRadius + (EndRadius - startRadius) * progress;
+
+                this.RenderBoard(currentRadius, LegalMove);
+            },
+
+            onComplete: () => {
+                anim.isPlaying = false;
+                
+                this.RenderBoard(EndRadius, LegalMove);
+            },
+
+            easing: this.easeInOutQuad
+        });
+
+        this.animationMenager.addAnimation(anim);
+    }   
+
+
     easeInOutQuad(t) {
-        return t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t ) * t;
     }
 
     drawPieceAtCoords(piece, currentX, currentY)

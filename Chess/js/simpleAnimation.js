@@ -27,6 +27,7 @@ export class SimpleAnimation
         if(elapsed >= this.duration)
         {
             this.isFinished = true;
+            
             if(this.onComplete)
                 this.onComplete();
         }
