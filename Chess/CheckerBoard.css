@@ -1,0 +1,15 @@
+@font-face {
+    font-family: BoldFont;
+    src: url(Fonts/Segoe\ UI\ Bold.ttf);
+}
+
+body
+{
+    background-color: #302E2B;
+}
+
+
+#ChessBoard
+{
+    margin-left: 5vw;
+}
