@@ -5,6 +5,10 @@ import { Piece } from "./pieces/Piece.js";
 
 export class PhysicalBoard
 {
+    animatingCircles = new Map(); // Track radius for each square
+    activeAnimations = new Map(); // Track active animations per square
+
+
     boardElement = null;
     ctx = null;
 
@@ -16,8 +20,7 @@ export class PhysicalBoard
 
     virtualBoard = null;
 
-
-    hoveredSquare = null;
+    lastHoveredSquare = null;
     selectedSquare = null;
 
     HighlightedSquares = []
@@ -25,14 +28,15 @@ export class PhysicalBoard
     SpriteSheet = null;
 
 
+
+    circleAnimating = null;
+
     primaryColor = "#EBECD0";
     secondaryColor = "#739552";
     highlightLegalMovesColor = "rgba(0, 0, 0, 0.4)";
 
 
     animationMenager = null;
-
-    hoveredLegalMoves = []
 
 
     constructor(virtualBoard)
@@ -134,7 +138,6 @@ export class PhysicalBoard
         this.drawPieces();
     }
 
-
     drawBoard()
     {
         for(let i = 0; i < 8; i++)
@@ -160,35 +163,35 @@ export class PhysicalBoard
         }
     }
 
-    drawPossibleMoves(radius, legalMove2)
+    drawPossibleMoves() 
     {
-        if(this.selectedSquare !== null)
+        if (this.selectedSquare !== null) 
         {
-            for(let legalMove of this.virtualBoard.getPieceAt(this.selectedSquare).legalMoves)
-            {
-                let legalMoveCoords = Helper.to2D(legalMove);
+            const piece = this.virtualBoard.getPieceAt(this.selectedSquare);
 
-                if(legalMove === legalMove2)
+            if (!piece) return;
+    
+            for (const legalMove of piece.legalMoves) {
+
+                const coords = Helper.to2D(legalMove);
+
+                const hasPiece = this.virtualBoard.getPieceAt(legalMove) !== null;
+                const radius = this.animatingCircles.get(legalMove) || 15;
+    
+                this.ctx.beginPath();
+                console.log(this.animatingCircles)
+                this.ctx.arc( coords[1] * this.squareWidth + this.squareWidth/2, coords[0] * this.squareHeight + this.squareHeight/ 2, radius, 0, 2 * Math.PI );
+    
+                if (hasPiece) 
                 {
-                    this.ctx.beginPath();
-                    this.ctx.arc(legalMoveCoords[1] * this.squareWidth + (this.squareWidth / 2), legalMoveCoords[0] * this.squareHeight + (this.squareHeight / 2), radius, 0, 2 * Math.PI );
-                    this.ctx.fillStyle = this.highlightLegalMovesColor;
-                    this.ctx.fill();
-                }
-                else if(this.virtualBoard.getPieceAt(legalMove) === null)
-                {
-                    this.ctx.beginPath();
-                    this.ctx.arc(legalMoveCoords[1] * this.squareWidth + (this.squareWidth / 2), legalMoveCoords[0] * this.squareHeight + (this.squareHeight / 2), 15, 0, 2 * Math.PI );
-                    this.ctx.fillStyle = this.highlightLegalMovesColor;
-                    this.ctx.fill();
-                }
-                else
-                {
-                    this.ctx.beginPath();
-                    this.ctx.arc(legalMoveCoords[1] * this.squareWidth + (this.squareWidth / 2), legalMoveCoords[0] * this.squareHeight + (this.squareHeight / 2), 35, 0, 2 * Math.PI );
                     this.ctx.strokeStyle = this.highlightLegalMovesColor;
                     this.ctx.lineWidth = 10;
-                    this.ctx.stroke()
+                    this.ctx.stroke();
+
+                } else {
+
+                    this.ctx.fillStyle = this.highlightLegalMovesColor;
+                    this.ctx.fill();
                 }
             }
         }
@@ -226,31 +229,44 @@ export class PhysicalBoard
         }
     }
 
-    hoverSquare(squareIndex) {
-        
-        if(this.hoveredSquare !== null && this.hoveredSquare !== squareIndex)
-            this.RenderBoard();
+    hoverSquare(squareIndex) 
+    {
+        const prevHovered = this.lastHoveredSquare;
 
-        let position = Helper.to2D(squareIndex)
-
-
-        if( this.lastHoveredSquare !== squareIndex)
+        const isLegalMove = this.selectedSquare && this.virtualBoard.getPieceAt(this.selectedSquare).legalMoves.includes(squareIndex);
+    
+        // Only trigger animations if we entered a new square
+        if (prevHovered !== squareIndex) 
         {
-            this.startLegalMovesAnimation(squareIndex, 15, 30, 1000)
-            this.lastHoveredSquare = squareIndex;
+            // Handle previous hovered square (reverse animation)
+            if (prevHovered !== null && this.selectedSquare) 
+            {
+                const wasLegalMove = this.virtualBoard.getPieceAt(this.selectedSquare).legalMoves.includes(prevHovered);
+                
+                if (wasLegalMove) {
+                    this.startLegalMovesAnimation(prevHovered, 30, 15, 100);
+                }
+            }
+    
+            // Handle new hovered square (forward animation)
+            if (isLegalMove) {
+                this.startLegalMovesAnimation(squareIndex, 15, 30, 100);
+            }
+    
+            this.RenderBoard();
         }
+    
+        // Handle piece highlighting
+        const position = Helper.to2D(squareIndex);
 
-        if(this.virtualBoard.getPieceAt(squareIndex) !== null && this.hoveredSquare !== squareIndex)
+        if (this.virtualBoard.getPieceAt(squareIndex) !== null && prevHovered !== squareIndex) 
         {
             this.ctx.strokeStyle = "rgb(255, 255, 255)";
             this.ctx.lineWidth = 3;
-            this.ctx.strokeRect(position[1] * this.squareWidth, position[0] * this.squareHeight, this.squareWidth, this.squareHeight); 
-        }   
-
-
-        this.hoveredSquare = squareIndex;
-        
-        console.log(this.hoveredSquare)
+            this.ctx.strokeRect( position[1] * this.squareWidth, position[0] * this.squareHeight, this.squareWidth, this.squareHeight );
+        }
+    
+        this.lastHoveredSquare = squareIndex;
     }
 
     HighlightSquare()
@@ -300,13 +316,14 @@ export class PhysicalBoard
 
                 piece.isMoving = false;
 
+                
+                anim.isPlaying = false;
                 let posIndex = Helper.toLinear([endY, endX])
                 this.virtualBoard.movePiece(piece.position, posIndex);
-
-                anim.isPlaying = false;
                 this.RenderBoard();
             },
 
+
             easing: this.easeInOutQuad
         });
 
@@ -314,30 +331,48 @@ export class PhysicalBoard
     }   
 
 
-    startLegalMovesAnimation(LegalMove, startRadius, EndRadius, duration = 300)
+    startLegalMovesAnimation(squareIndex, startRadius, endRadius, duration) 
     {
-        const anim = new SimpleAnimation({
-            duration, 
+        // Only start animation if not already animating to the target radius
+        const currentRadius = this.animatingCircles.get(squareIndex);
+
+        if (currentRadius === endRadius) return;
+    
+        // Cancel existing animation for this square
+        if (this.activeAnimations.has(squareIndex)) 
+        {
+            this.activeAnimations.get(squareIndex).stop();
+        }
+    
+        const anim = new SimpleAnimation
+        ({
+            duration,
 
             onUpdate: (progress) => {
-                anim.isPlaying = true;
 
-                let currentRadius = startRadius + (EndRadius - startRadius) * progress;
-
-                this.RenderBoard(currentRadius, LegalMove);
+                const currentRadius = startRadius + (endRadius - startRadius) * progress;
+                this.animatingCircles.set(squareIndex, currentRadius);
+                this.RenderBoard();
             },
 
             onComplete: () => {
-                anim.isPlaying = false;
-                
-                this.RenderBoard(EndRadius, LegalMove);
+
+                this.activeAnimations.delete(squareIndex);
+                // Only keep final state if it's the expanded version
+                if (endRadius === 15) {
+                    this.animatingCircles.delete(squareIndex);
+                }
             },
 
             easing: this.easeInOutQuad
+
         });
+    
+        this.activeAnimations.set(squareIndex, anim);
 
         this.animationMenager.addAnimation(anim);
-    }   
+    }
+
 
 
     easeInOutQuad(t) {
@@ -362,9 +397,4 @@ export class PhysicalBoard
             this.squareWidth, this.squareHeight
         );
     }
-
-    
-
-
-
 }

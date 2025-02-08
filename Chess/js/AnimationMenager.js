@@ -1,43 +1,57 @@
-
-export class AnimationMenager
+export class AnimationMenager 
 {
-    constructor()
+    constructor() 
     {
-        this.animations = [ ]
+        this.animations = [];
         this.lastTimeStamp = 0;
         this.rafID = null;
     }
 
-    addAnimation(animation)
+    addAnimation(animation) 
     {
         this.animations.push(animation);
 
-        if(!this.rafID){
+        if (!this.rafID) {
             this.lastTimeStamp = performance.now();
             this.loop();
         }
     }
 
-    loop(){
-        this.rafID = requestAnimationFrame((TimeStamp) => this.loopCore(TimeStamp));
+    loop() {
+        this.rafID = requestAnimationFrame((timeStamp) => this.loopCore(timeStamp));
     }
 
-    loopCore(TimeStamp)
+    loopCore(timeStamp) 
     {
-        const delta = TimeStamp - this.lastTimeStamp;
-        this.lastTimeStamp = TimeStamp;
+        const delta = timeStamp - this.lastTimeStamp;
+        this.lastTimeStamp = timeStamp;
 
+        // Update and filter animations
         this.animations = this.animations.filter((anim) => {
-            anim.update(TimeStamp, delta);
-            return !anim.isFinished;
-        })
+            if (anim.isStopped) {
+                if (anim.onStop) anim.onStop();
+                return false;
+            }
+            
+            anim.update(timeStamp, delta);
 
-        if(this.animations.length > 0){
+            return !anim.isFinished;
+        });
+
+        if (this.animations.length > 0) 
+        {
             this.loop();
-        }
-        else{
+        } 
+        else 
+        {
             cancelAnimationFrame(this.rafID);
             this.rafID = null;
         }
+    }
+
+    // New method to cancel all animations
+    cancelAll() {
+        this.animations.forEach(anim => anim.stop());
+        this.animations = [];
     }
 }
