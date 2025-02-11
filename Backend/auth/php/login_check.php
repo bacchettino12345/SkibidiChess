@@ -1,10 +1,13 @@
 <?php
-    require '../db_connection.php';
-    // MODIFICARE PER FUNZIONAMENTO CON AJAX
-    $user = $_POST['user'];
-    $psswd = hash('sha256', $_POST['psswd']);
-
+    require '../../db_connection.php';
+    header('Content-Type: application/json');
+    $data = json_decode(file_get_contents("php://input"), true);
     session_start();
+
+    if ($data) {
+        $user = $data['username'];
+        $psswd = hash("sha256", $data['password']);
+    }
     session_destroy();
     $_SESSION = [];
     session_start();
@@ -18,10 +21,10 @@
     {
         $_SESSION['user'] = $user;
         $_SESSION['psswd'] = $psswd;
-        echo 1;
+        echo true;
     } else
     {
-        echo 0;
+        echo false;
     }
 
 ?>
