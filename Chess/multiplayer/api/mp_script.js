@@ -1,9 +1,7 @@
-function verifySessionActive(){
-    console.log('verifying session');
+function verifyActiveToken(){
     fetch('./php/verify_session_status.php')
     .then(response => response.json())
     .then(data => {
-        console.log(data);
         if(data != -1)
             {
                 document.getElementById('insert_token').style.display = 'none';
@@ -25,7 +23,7 @@ function verifySessionActive(){
     }); 
 }
 
-document.getElementById('validate').addEventListener('click', function(){
+function validateGameToken(){
     token = document.getElementById('token').value;
     fetch('./php/enter_session.php', {
         method: 'POST',
@@ -49,11 +47,9 @@ document.getElementById('validate').addEventListener('click', function(){
             }
         })
 
-});
+}
 
-
-document.getElementById('generate').addEventListener('click', function(){
-    
+function generateGameToken(){
     document.getElementById('insert_token').style.display = 'none';
     document.getElementById('generate_token').style.display = 'none';
     fetch('./php/generate_session.php')
@@ -67,9 +63,9 @@ document.getElementById('generate').addEventListener('click', function(){
         setInterval(updateClock, 1000);
     })
     .catch(error => console.error(error));
-});
+}
 
-document.getElementById('destroy').addEventListener('click', function(){
+function destroyGameToken(){
     
     document.getElementById('insert_token').style.display = 'block';
     document.getElementById('generate_token').style.display = 'block';
@@ -81,9 +77,9 @@ document.getElementById('destroy').addEventListener('click', function(){
         console.log('session destroyed');
     })
     .catch(error => console.error(error));
-});
+}
 
-setInterval(verifySessionActive, 500);
+setInterval(verifyActiveToken, 500);
 
 let updateClock = () => {
     let now = new Date().getTime();
