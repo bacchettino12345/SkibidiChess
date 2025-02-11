@@ -1,8 +1,8 @@
 <?php
-require 'php/db_connection.php';
-
-$user = $_POST['user'];
-$psswd = hash('sha256', $_POST['psswd']);
+    require '../db_connection.php';
+    // MODIFICARE PER FUNZIONAMENTO CON AJAX
+    $user = $_POST['user'];
+    $psswd = hash('sha256', $_POST['psswd']);
 
     session_start();
     session_destroy();
@@ -13,17 +13,15 @@ $psswd = hash('sha256', $_POST['psswd']);
     $stmt->bindParam(':user', $user);
     $stmt->bindParam(':psswd', $psswd);
     $stmt->execute();
-    echo "ziocane";
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if($result)
     {
         $_SESSION['user'] = $user;
         $_SESSION['psswd'] = $psswd;
-        header('Location: ./index.php');
+        echo 1;
     } else
     {
-        header('Location: ./login.html');
+        echo 0;
     }
-
 
 ?>
