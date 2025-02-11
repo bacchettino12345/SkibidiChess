@@ -89,7 +89,7 @@ export class PhysicalBoard
                 let endCoords = Helper.to2D(clickedSquare);
 
 
-                this.startPieceMoveAnimation(this.virtualBoard.pieces[this.selectedSquare], startCoords[1], startCoords[0], endCoords[1], endCoords[0], 200 );
+                this.startPieceMoveAnimation(this.virtualBoard.pieces[this.selectedSquare], startCoords[1], startCoords[0], endCoords[1], endCoords[0], 100 );
 
 
                 this.HighlightedSquares.push(clickedSquare);
@@ -179,7 +179,6 @@ export class PhysicalBoard
                 const radius = this.animatingCircles.get(legalMove) || 15;
     
                 this.ctx.beginPath();
-                console.log(this.animatingCircles)
                 this.ctx.arc( coords[1] * this.squareWidth + this.squareWidth/2, coords[0] * this.squareHeight + this.squareHeight/ 2, radius, 0, 2 * Math.PI );
     
                 if (hasPiece) 
@@ -316,10 +315,10 @@ export class PhysicalBoard
 
                 piece.isMoving = false;
 
-                
                 anim.isPlaying = false;
                 let posIndex = Helper.toLinear([endY, endX])
                 this.virtualBoard.movePiece(piece.position, posIndex);
+                this.animatingCircles.delete(piece.position)
                 this.RenderBoard();
             },
 

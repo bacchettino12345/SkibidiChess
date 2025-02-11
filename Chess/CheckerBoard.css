@@ -1,15 +1,151 @@
 @font-face {
     font-family: BoldFont;
+    src: url(Fonts/Segoe\ UI.ttf);
+}
+
+@font-face {
+    font-family: BoldFont2;
     src: url(Fonts/Segoe\ UI\ Bold.ttf);
 }
 
 body
 {
     background-color: #302E2B;
+    display: flex;
+    flex-direction: row;
 }
 
+#ChessPanel
+{
+    margin-left: 5vw;
+    width: fit-content;
+    margin-top: 0.5vw;
+}
+
+#PlayerImg
+{
+    border-radius: 10%;
+    width: 2vw;
+    height: 2vw;
+}
 
 #ChessBoard
 {
-    margin-left: 5vw;
+    border-radius: 1%;
+}
+
+#PlayerInfo
+{
+    display: flex;
+    flex-direction: row;
+    margin-block: 1vh;
+}
+
+#nameInfo
+{
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+#nameInfo h2{
+    color: rgb(255, 255, 255);
+    font-family: BoldFont;
+    font-size: 14px;
+    margin: 0;
+}
+
+#GameInfo
+{
+    border-radius: 0.5vw;
+    height: 50vh;
+    width: 20vw;
+    background-color: #262522;
+
+
+    
+    margin-left: 2vw;
+    margin-top: 3.5vw;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#GameInfo h1{
+    width: 100%;
+    padding-top: 1vh;
+    height: 4vh;
+    font-size: 2vh;
+    font-family: BoldFont2;
+    color: white;
+    text-align: center;
+    border-radius: 0.5vw 0.5vw 0 0;
+    margin: 0;
+    background-color: #21201D;
+}
+
+#Bots
+{
+    width: 100%;
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: row;
+
+}
+
+#Bots img{
+
+    
+    border-radius: 0.4vw;
+    width: 3vw;
+    height: 3vw;
+}
+
+#Bots button{
+
+    margin: auto;
+    width: 4vw;
+    height: 4vw;
+    border: none;
+    background-color: transparent;
+
+    transition: all ease 0.1s;
+}
+
+#Bots button:hover{
+
+    border: solid;
+    border-radius: 0.3vw;
+    border-color: #81B64C;
+    background-color: transparent;
+}
+
+#Suggestion {
+    margin-top: 10vh;
+    width: 10vw;
+    height: 6vh;
+
+    border: none;
+
+    background-color: #81B64C;
+    color: #fff;
+    box-shadow: 0px 5px 0px 0px #5c8236;
+    padding: 10px 20px;
+    font-size: 1vw;
+
+    font-family: BoldFont2;
+    border-radius: 10px;
+
+    cursor: pointer;
+    transition: all ease 0.1s;
+}
+
+#Suggestion:active {
+  transform: translateY(5px);
+  box-shadow: 0px 0px 0px 0px #5c8236;
+}
+
+#Suggestion:hover{
+    background-color: #A3D160;
 }
