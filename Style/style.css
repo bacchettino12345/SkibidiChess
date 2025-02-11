@@ -1,1 +1,30 @@
 @import "tailwindcss";
+
+
+
+@layer components{
+
+    .GreenBtn{
+        border: none;
+        outline: none;
+        background-color: #7FB44A;
+        padding: 10px 20px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+        border-radius: 5px;
+        transition: all ease 0.1s;
+        box-shadow: 0px 5px 0px 0px #739552;
+    }
+
+    .GreenBtn:active{
+        transform: translateY(5px);
+        box-shadow: 0px 0px 0px 0px #739552;
+    }
+
+    .GreenBtn:hover{
+        background-color: #A1CF5F;
+    }
+
+
+}

@@ -1,7 +1,7 @@
-import { Helper } from "./Helpers.js";
-import { AnimationMenager } from "./AnimationMenager.js";
-import { SimpleAnimation } from "./simpleAnimation.js";
-import { Piece } from "./pieces/Piece.js";
+import { Helper } from "../game/Helpers.js";
+import { AnimationMenager } from "../game/AnimationMenager.js";
+import { SimpleAnimation } from "../game/simpleAnimation.js";
+import { Piece } from "../game/pieces/Piece.js";
 
 export class PhysicalBoard
 {
@@ -121,7 +121,7 @@ export class PhysicalBoard
     {
         this.SpriteSheet = new Image();
 
-        this.SpriteSheet.src = './js/pieces/Images/SpriteSheet.svg';
+        this.SpriteSheet.src = "../Assets/Images/SpriteSheet.svg";
         
         this.SpriteSheet.onload = () => {
             this.RenderBoard();
