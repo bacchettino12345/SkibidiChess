@@ -16,11 +16,15 @@
             <div id="GameMod" class="flex  flex-col">
                 <a href="singleplayer.html"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] text-[1vw]">Singleplayer</button></a>
                 <a href="multiplayer.php"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] mt-[3vw] text-[1vw]">Multiplayer</button></a>
-                <a href="./admin"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] mt-[3vw] text-[1vw]">Administration</button></a>
+                <a href="./admin"><button id="adminButton" class="GreenBtn w-[20vw] h-[6vh] mt-[3vw] text-[1vw]" style="display: none;">Administration</button></a>
                 <a href="../Backend/auth/php/logout.php"><button id="logoutButton" class="RedBtn w-[20vw] h-[6vh] text-[1vw] mt-[3vw]" style="display: none;">Logout</button></a>
             </div>
         </div>
         <script>
+            function enableAdmin()
+            {
+                document.getElementById("adminButton").style.display = 'block';
+            }
             function enableLogout()
             {
                 document.getElementById("logoutButton").style.display = 'block';
@@ -34,16 +38,29 @@
                 if(!isset($_SESSION['user']))
                 {
                     $user = "Guest";
+                    $admin = false;
                 } else
                 {
+                    if(isset($_SESSION['admin'])){
+                        $admin = true;
+                    }
+                    else
+                        $admin = false;
                     $user = $_SESSION['user'];
                 }
             ?>
         <script>
             let user = "<?php echo $user; ?>";
+            alert(user);
+            let admin = "<?php echo $admin; ?>";
             if(user != "Guest")
             {
                 enableLogout();
+            }
+            if(admin === "1")
+            {
+                alert("admin");
+                enableAdmin();
             }
             document.getElementById("username").innerText = user;
         </script>

@@ -22,7 +22,7 @@
     
     <a href="./tokens.php"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] text-[1vw] mb-10">Game Token Manager</button></a>
     <a href="./users.php"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] text-[1vw] mb-10">User Manager</button></a>
-    <a href="../../Backend/auth/php/logout.php"><button id="Button" class="RedBtn w-[20vw] h-[6vh] text-[1vw] mb-10">Logout</button></a>
+    <a href="../index.php"><button id="Button" class="RedBtn w-[20vw] h-[6vh] text-[1vw] mb-10">Back to Menu</button></a>
     </div>
 
 </body>
