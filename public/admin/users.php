@@ -12,7 +12,7 @@
         <hr class="bg-white h-[50px] w-[2px]">
         <p class="text-white text-3xl"><i>Administration Panel</i></p>        
     </div>
-    <a href="./index.html" class="text-white"><i><< Back to Index</i></a>
+    <a href="./index.php" class="text-white"><i><< Back to Index</i></a>
     <div id="users" class="text-white w-full mx-auto mt-[2vh]">
         <p class="text-white text-3xl">Users</p>
         <div class="mt-[2vh] p-[20px] bg-[#1c1a19] rounded-[10px] w-full">

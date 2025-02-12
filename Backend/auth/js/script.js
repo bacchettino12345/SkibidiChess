@@ -15,7 +15,7 @@ function checkLogin()
         console.log(data);
         if(data == true)
         {
-            window.location.href = '../public/multiplayer.html';
+            window.location.href = './index.php';
         }
         else
         {

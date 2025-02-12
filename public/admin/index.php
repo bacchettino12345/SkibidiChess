@@ -1,3 +1,7 @@
+<?php
+    require './check_login_admin.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,10 +16,13 @@
         <div class="flex justify-center items-center gap-4 mb-5.5">
             <img src="../../Assets/Images/Logo.png" alt="logo" class="w-[25%]">
             <hr class="bg-white h-[50px] w-[2px]">
-            <p class="text-white text-4xl"><i>Administration Panel</i></p>        
+            <p class="text-white text-4xl"><i>Administration Panel</i></p>
+                    
         </div>
-    <a href="./tokens.php"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] text-[1vw] mb-10">Manage Users</button></a>
-    <a href="./users.php"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] text-[1vw] mb-1.5">Manager Tokens</button></a>
+    
+    <a href="./tokens.php"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] text-[1vw] mb-10">Game Token Manager</button></a>
+    <a href="./users.php"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] text-[1vw] mb-10">User Manager</button></a>
+    <a href="../../Backend/auth/php/logout.php"><button id="Button" class="RedBtn w-[20vw] h-[6vh] text-[1vw] mb-10">Logout</button></a>
     </div>
 
 </body>

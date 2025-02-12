@@ -1,8 +1,10 @@
 <?php
     
-require 'db_connection.php';
-session_start();
-
+require '../../db_connection.php';
+if(!isset($_SESSION))
+{
+    session_start();
+}
 try
 {
     $sql = "DELETE FROM tokens WHERE id = :token";
@@ -11,7 +13,6 @@ try
     $_SESSION['token'] = null;
     unset($_SESSION['token']);
     $stmt->execute();
-    echo "1";
 }
 catch(PDOException $e)
 {

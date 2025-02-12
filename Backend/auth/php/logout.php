@@ -1,7 +1,10 @@
 <?php
-    require '../game/php/destroy_session.php';
-    session_start();
+    require '../../game/php/destroy_session.php';
+    if(!isset($_SESSION))
+    {
+        session_start();
+    }
     session_destroy();
     $_SESSION = [];
-    exit();
+    header("Location: ../../../public/index.php");
 ?>

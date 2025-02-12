@@ -21,6 +21,13 @@
     {
         $_SESSION['user'] = $user;
         $_SESSION['psswd'] = $psswd;
+        if($result['admin'] == 1)
+        {
+            $_SESSION['admin'] = true;
+        }
+        else {
+            unset($_SESSION['admin']);
+        }
         echo true;
     } else
     {
