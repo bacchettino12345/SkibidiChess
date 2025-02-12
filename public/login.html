@@ -6,13 +6,15 @@
     <title>SkibidiChess :: Login</title>
     <link rel="stylesheet" href="../Style/output.css">
     <script src="../Backend/auth/js/ajax.js"></script>
+    <link rel="shortcut icon" href="../Assets/Images/favicon.png" type="image/x-icon">
 </head>
 <body class="bg-[#302E2B]">
     <script> 
         function validateInput(){
-            const regex = /^[a-zA-Z0-9_]{3,16}$/;
+            const regex = /^[a-zA-Z0-9_]{3,24}$/;
             if(document.getElementById('password').value == "" || document.getElementById('username').value == "" || regex.test(document.getElementById('username').value) == false){
                 document.querySelector('#nvc').style.display = "block";
+                document.querySelector('#wce').style.display = 'none';
             }
             else
             {    
@@ -41,7 +43,7 @@
                 Warining
                 </div>
                 <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-                    <p>Something not ideal might be happening.</p>
+                    <p>Wrong username or password.</p>
                 </div>
             </div>
             <div role="alert" class="mt-1 mb-1" style="display: none;" id="nvc">

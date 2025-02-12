@@ -19,6 +19,7 @@ function checkLogin()
         }
         else
         {
+            document.querySelector('#nvc').style.display = 'none';
             document.querySelector('#wce').style.display = 'block';
         }
     })
