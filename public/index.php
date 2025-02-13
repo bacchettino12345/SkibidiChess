@@ -18,6 +18,7 @@
                 <a href="multiplayer.php"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] mt-[3vw] text-[1vw]">Multiplayer</button></a>
                 <a href="./admin"><button id="adminButton" class="GreenBtn w-[20vw] h-[6vh] mt-[3vw] text-[1vw]" style="display: none;">Administration</button></a>
                 <a href="../Backend/auth/php/logout.php"><button id="logoutButton" class="RedBtn w-[20vw] h-[6vh] text-[1vw] mt-[3vw]" style="display: none;">Logout</button></a>
+                <a href="./login.html"><button id="loginButton" class="GreenBtn w-[20vw] h-[6vh] mt-[3vw] text-[1vw]" style="display: none;">Login</button></a>
             </div>
         </div>
         <script>
@@ -28,6 +29,11 @@
             function enableLogout()
             {
                 document.getElementById("logoutButton").style.display = 'block';
+            }
+
+            function enableLogin()
+            {
+                document.getElementById("loginButton").style.display = 'block';
             }
         </script>
             <?php
@@ -51,15 +57,17 @@
             ?>
         <script>
             let user = "<?php echo $user; ?>";
-            alert(user);
             let admin = "<?php echo $admin; ?>";
             if(user != "Guest")
             {
                 enableLogout();
             }
+            else
+            {
+                enableLogin();
+            }
             if(admin === "1")
             {
-                alert("admin");
                 enableAdmin();
             }
             document.getElementById("username").innerText = user;

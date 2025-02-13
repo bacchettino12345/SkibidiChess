@@ -1,6 +1,7 @@
 <?php
     require './check_login_admin.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +17,7 @@
         <p class="text-white text-3xl"><i>Administration Panel</i></p>        
     </div>
     <a href="./" class="text-white"><i><< Back to Index</i></a>
-    <div id="active_tokens" class="text-white  mx-auto mt-[2vh]">
+    <div id="active_tokens" class="text-white  mx-auto mt-[2vh] mb-5">
         <p class="text-white text-3xl">Active Tokens</p>
         <div class="mt-[2vh] p-[20px] bg-[#1c1a19] rounded-[10px] w-full">
             <table class="w-full">
@@ -25,24 +26,38 @@
                     <td>Date Generation</td>
                     <td>LMx</td>
                     <td>LMy</td>
-                    <td>Actions</td>
+                    <td>FEN</td>
                 </tr>
                 <?php
                 require '../../Backend/db_connection.php';
-                    $sql = "SELECT * FROM tokens";
-                    $result = $conn->query($sql);
-                    if ($result) {
-                        while($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<tr>";
-                            echo "<td>".$row['id']."</td>";
-                            echo "<td>".$row['date']."</td>";
-                            echo "<td>".$row['last_move_x']."</td>";
-                            echo "<td>".$row['last_move_y']."</td>";
-                            echo "</tr>";
-                        }
+                $sql = "SELECT * FROM tokens";
+                $result = $conn->query($sql);
+                if ($result) {
+                    while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                        echo "<tr>";
+                        echo "<td>".$row['id']."</td>";
+                        echo "<td>".$row['date']."</td>";
+                        echo "<td>".$row['last_move_x']."</td>";
+                        echo "<td>".$row['last_move_y']."</td>";
+                        echo "<td>".$row['fen']."</td>";
+                        echo "</tr>";
                     }
-                    ?>
+                }
+                ?>
             </table>
+        </div>
+    </div>
+    </div>
+    <p class="text-white text-3xl">Destroy Token</p>
+        <div class="mt-[2vh] p-[20px] bg-[#1c1a19] rounded-[10px] w-full flex items-center gap-2">
+            <label for="username" class="text-white">Enter Token to destroy: </label>
+            <input
+                class="bg-[#22201e] px-2 py-1 outline-none text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#b92828] border-[#1c1a19]"
+                name="user"
+                placeholder="Token"
+                id="username"
+                type="text">
+            <button id="destroyToken" class="RedBtn py-1 mb-[0.625vh]">Destroy</button>
         </div>
     </div>
 </body>
