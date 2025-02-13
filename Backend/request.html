@@ -7,14 +7,17 @@
 </head>
 <body>
   <script type="module">
-    import { callAPI } from "./game/js/Stockfish.js";
-    callAPI("rn1q1rk1/pp2b1pp/2p2n2/3p1pB1/3P4/1QP2N2/PP1N1PPP/R4RK1 b - - 1 11", 12)
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => {
-        console.error("Errore nella chiamata API:", error);
-      });
+    import { callAPI } from './game/js/Stockfish.js';
+
+    const fen = "rn1q1rk1/pp2b1pp/2p2n2/3p1pB1/3P4/1QP2N2/PP1N1PPP/R4RK1 b - - 1 11";
+    const depth = 12;
+    
+    try {
+      const move = await callAPI(fen, depth);
+      console.log(move);
+    } catch (error) {
+      console.log("errore funzione per chiavata API");
+    }
   </script>
 </body>
 </html>
