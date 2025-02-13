@@ -21,6 +21,9 @@ export class VirtualBoard{
     pieces = []
     isWhiteTurn = null
 
+
+    CurrentFEN = null;
+
     constructor()
     {
         this.pieces = new Array(64).fill(null);
@@ -29,6 +32,8 @@ export class VirtualBoard{
 
     GenerateBoardFromFEN(FEN)
     {
+        this.CurrentFEN = FEN;
+
         this.pieces = new Array(64).fill(null);
 
         let PositionsFEN = FEN.split(" ")[0].split("/");
@@ -74,21 +79,72 @@ export class VirtualBoard{
     {
         if(startSquare !== null && this.getPieceAt(startSquare).legalMoves.includes(targetSquare))
         {
+
+            if(this.pieces[startSquare].type == "P" || "p")
+                this.pieces[startSquare].firstMove = false;
+
+
             this.pieces[targetSquare] = this.pieces[startSquare];
             this.pieces[startSquare] = null;
             this.pieces[targetSquare].position = targetSquare;
+
+
             
             for(let piece of this.pieces)
             {
                 if(piece !== null)
                     piece.calculateLegalMoves(this.pieces)
             }
-            
+
+
+
+            this.rebuildFEN();
+
             return true;
         }
             
         return false;
     }
+
+    rebuildFEN()
+    {
+        let counter = 0;
+        let newFEN = "";
+    
+        for (let i = 0; i < this.pieces.length; i++)
+        {
+            if (this.pieces[i]) 
+            {
+                if (counter > 0) 
+                {
+                    newFEN += counter; // Append empty square count
+                    counter = 0;
+                }
+    
+                newFEN += this.pieces[i].type; // Append piece symbol
+            } 
+            else 
+            {
+                counter++; // Count empty squares
+            }
+    
+            // Handle row ending
+            if ((i + 1) % 8 === 0) 
+            {
+                if (counter > 0) 
+                {
+                    newFEN += counter; // Append counter before row ends
+                    counter = 0;
+                }
+    
+                if (i !== this.pieces.length - 1) // Avoid extra "/" at the end
+                    newFEN += "/";
+            }
+        }
+
+        this.CurrentFEN = newFEN;
+    }
+    
 
     canPieceMove(startSquare, targetSquare)
     {

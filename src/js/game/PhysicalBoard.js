@@ -158,7 +158,7 @@ export class PhysicalBoard
         for(let i = 0; i <= 8; i++)
         {
             this.ctx.fillStyle = i % 2 === 0 ? this.primaryColor : this.secondaryColor;
-            this.ctx.fillText(i, 5, (i * this.squareHeight)- 75 );
+            this.ctx.fillText(9 - i, 5, (i * this.squareHeight)- 75 );
             this.ctx.fillText(String.fromCharCode(97 + i), (i * this.squareWidth) + 80 , 8 * this.squareHeight - 5);
         }
     }
@@ -329,7 +329,6 @@ export class PhysicalBoard
         this.animationMenager.addAnimation(anim);
     }   
 
-
     startLegalMovesAnimation(squareIndex, startRadius, endRadius, duration) 
     {
         // Only start animation if not already animating to the target radius
@@ -372,8 +371,6 @@ export class PhysicalBoard
         this.animationMenager.addAnimation(anim);
     }
 
-
-
     easeInOutQuad(t) {
         return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t ) * t;
     }
@@ -395,5 +392,10 @@ export class PhysicalBoard
             currentX * this.squareWidth, currentY * this.squareHeight,
             this.squareWidth, this.squareHeight
         );
+    }
+
+
+    Reverseboard(){
+        
     }
 }
