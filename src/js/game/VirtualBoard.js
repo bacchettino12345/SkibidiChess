@@ -190,6 +190,8 @@ export class VirtualBoard{
                 let rankFrom = 8 - parseInt(moves[1])
                 let rankTo = 8 - parseInt(moves[3])
 
+                let piece = this.pieces[Helper.toLinear([rankFrom, fileFrom])]
+
                 this.physicalBoard.startPieceMoveAnimation(piece, fileFrom, rankFrom, fileTo, rankTo, 200)
             })
         }
