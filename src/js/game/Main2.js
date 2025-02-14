@@ -9,17 +9,16 @@ virtualBoard.GenerateBoardFromFEN(startingFEN);
 
 const physicalBoard = new PhysicalBoard(virtualBoard);
 
+window.addEventListener('resize', resizeCanvas, false);
+
+
+function resizeCanvas() {
+    physicalBoard.resizeBoard();
+}
 
 
 window.Reverseboard = function () {
     physicalBoard.isFlipped = !physicalBoard.isFlipped;
     physicalBoard.RenderBoard();
-    console.log(virtualBoard.CurrentFEN)
 };
-
-
-
-
-
-
 

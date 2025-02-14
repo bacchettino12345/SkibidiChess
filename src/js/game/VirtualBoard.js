@@ -99,9 +99,9 @@ export class VirtualBoard{
                     piece.calculateLegalMoves(this.pieces)
             }
 
-
-
             this.rebuildFEN();
+
+            this.isWhiteTurn = !this.isWhiteTurn
 
             return true;
         }

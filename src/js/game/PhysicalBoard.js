@@ -18,6 +18,9 @@ export class PhysicalBoard
     squareWidth = null;
     squareHeight = null;
 
+    normalMoveCirleRadius;
+    hoveredMoveCircleRadius;
+
     virtualBoard = null;
 
     lastHoveredSquare = null;
@@ -46,22 +49,15 @@ export class PhysicalBoard
         this.boardElement = document.getElementById("ChessBoard");
         this.ctx = this.boardElement.getContext("2d");
         
-        this.boardWidth = 800;
-        this.boardHeight = 800;
-
-        this.boardElement.width = this.boardWidth;
-        this.boardElement.height = this.boardHeight;
-        
-        this.squareWidth = this.boardWidth / 8;
-        this.squareHeight = this.boardHeight / 8;
         
         this.virtualBoard = virtualBoard;
-
+        
         this.isFlipped = false;
-
+        
         this.animationMenager = new AnimationMenager();
         
         this.LoadSprites();
+        this.resizeBoard();
         
         this.boardElement.addEventListener("click", (event) => this.handleClick(event));
         this.boardElement.addEventListener("mousemove", (event) => this.handleMove(event));
@@ -84,7 +80,7 @@ export class PhysicalBoard
         
         //Checks how to highlight the squares and whether to move a piece or not
 
-        if(this.selectedSquare === null && this.virtualBoard.getPieceAt(clickedSquare) !== null)
+        if(this.selectedSquare === null && this.virtualBoard.getPieceAt(clickedSquare) !== null  && this.isPlayerMove(clickedSquare))
         {
             this.HighlightedSquares = [];
             this.HighlightedSquares.push(clickedSquare);
@@ -105,7 +101,7 @@ export class PhysicalBoard
                 this.HighlightedSquares.push(clickedSquare);
                 this.selectedSquare = null;
             }
-            else if(this.virtualBoard.getPieceAt(clickedSquare) !== null)
+            else if(this.virtualBoard.getPieceAt(clickedSquare) !== null && this.isPlayerMove(clickedSquare))
             {
                 this.HighlightedSquares = [];
                 this.HighlightedSquares.push(clickedSquare);
@@ -115,6 +111,19 @@ export class PhysicalBoard
         
         this.RenderBoard();
 
+    }
+
+
+    isPlayerMove(clickedSquare){
+
+        console.log(this.virtualBoard.pieces[clickedSquare].isWhite)
+
+        if(this.virtualBoard.pieces[clickedSquare].isWhite !== this.virtualBoard.isWhiteTurn)
+        {
+            return false
+        }
+
+        return true
     }
 
     handleMove(event)
@@ -169,13 +178,26 @@ export class PhysicalBoard
 
     drawBoardCoords()
     {
-        this.ctx.font = "bold 20px arial";
+        this.ctx.font = "bold +" + (this.squareWidth / 100 * 20) + "px arial";
 
-        for(let i = 0; i <= 8; i++)
+
+        if(!this.isFlipped)
         {
-            this.ctx.fillStyle = i % 2 === 0 ? this.primaryColor : this.secondaryColor;
-            this.ctx.fillText(9 - i, 5, (i * this.squareHeight)- 75 );
-            this.ctx.fillText(String.fromCharCode(97 + i), (i * this.squareWidth) + 80 , 8 * this.squareHeight - 5);
+            for(let i = 0; i <= 8; i++)
+            {
+                this.ctx.fillStyle = i % 2 === 0 ? this.primaryColor : this.secondaryColor;
+                this.ctx.fillText(9 - i, 5, (i * this.squareHeight)- (this.squareWidth / 100 * 75) );
+                this.ctx.fillText(String.fromCharCode(97 + i), (i * this.squareWidth) + (this.squareWidth / 100 * 80), 8 * this.squareHeight - 5);
+            }
+        }
+        else
+        {
+            for(let i = 0; i <= 8; i++)
+            {
+                this.ctx.fillStyle = i % 2 === 0 ? this.primaryColor : this.secondaryColor;
+                this.ctx.fillText(i, 5, (i * this.squareHeight)- (this.squareWidth / 100 * 75) );
+                this.ctx.fillText(String.fromCharCode(104 - i), (i * this.squareWidth) + (this.squareWidth / 100 * 80), 8 * this.squareHeight - 5);
+            }
         }
     }
 
@@ -198,7 +220,7 @@ export class PhysicalBoard
                 }
 
                 const hasPiece = this.virtualBoard.getPieceAt(legalMove) !== null;
-                const radius = this.animatingCircles.get(legalMove) || 15;
+                const radius = this.animatingCircles.get(legalMove) || this.hoveredMoveCircleRadius;
     
                 this.ctx.beginPath();
                 this.ctx.arc( coords[1] * this.squareWidth + this.squareWidth/2, coords[0] * this.squareHeight + this.squareHeight/ 2, radius, 0, 2 * Math.PI );
@@ -268,13 +290,13 @@ export class PhysicalBoard
                 const wasLegalMove = this.virtualBoard.getPieceAt(this.selectedSquare).legalMoves.includes(prevHovered);
                 
                 if (wasLegalMove) {
-                    this.startLegalMovesAnimation(prevHovered, 30, 15, 100);
+                    this.startLegalMovesAnimation(prevHovered, this.normalMoveCirleRadius, this.hoveredMoveCircleRadius, 100);
                 }
             }
     
             // Handle new hovered square (forward animation)
             if (isLegalMove) {
-                this.startLegalMovesAnimation(squareIndex, 15, 30, 100);
+                this.startLegalMovesAnimation(squareIndex, this.hoveredMoveCircleRadius, this.normalMoveCirleRadius, 100);
             }
     
             this.RenderBoard();
@@ -437,7 +459,39 @@ export class PhysicalBoard
     }
 
 
-    Reverseboard(){
+    resizeBoard()
+    {
+
+        if(window.innerHeight > 300 )
+        {
+
+            this.boardWidth = window.innerHeight - 120;
+            this.boardHeight = window.innerHeight - 120;
+        }
+        else
+        {
+            this.boardWidth = 300;
+            this.boardHeight = 300;
+        }
+
+        this.boardElement.width = this.boardWidth;
+        this.boardElement.height = this.boardHeight;
         
+        this.squareWidth = this.boardWidth / 8;
+        this.squareHeight = this.boardHeight / 8;
+
+        this.normalMoveCirleRadius = (this.squareWidth / 100 * 30)
+        this.hoveredMoveCircleRadius = (this.squareWidth / 100 * 15)
+
+        this.recomputeMoveCirclesSizes();
+
+        this.RenderBoard()
+    }
+
+    recomputeMoveCirclesSizes()
+    {
+        this.animatingCircles.forEach((value, key) => {
+            this.animatingCircles.set(key, (this.squareWidth / 100 * value));
+          });
     }
 }
