@@ -28,6 +28,8 @@ export class PhysicalBoard
     SpriteSheet = null;
 
 
+    isFlipped = null;
+
 
     circleAnimating = null;
 
@@ -55,6 +57,8 @@ export class PhysicalBoard
         
         this.virtualBoard = virtualBoard;
 
+        this.isFlipped = false;
+
         this.animationMenager = new AnimationMenager();
         
         this.LoadSprites();
@@ -67,7 +71,7 @@ export class PhysicalBoard
     {
         const rect = this.boardElement.getBoundingClientRect();
 
-        const x = event.clientX - rect.left ;2
+        const x = event.clientX - rect.left ;
         const y = event.clientY - rect.top ;
 
         let clickedSquare = Helper.coordsToIndex(x, y, this.squareWidth, this.squareHeight);

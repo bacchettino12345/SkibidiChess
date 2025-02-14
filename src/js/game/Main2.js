@@ -12,14 +12,9 @@ const physicalBoard = new PhysicalBoard(virtualBoard);
 
 
 window.Reverseboard = function () {
-    let reversedFEN = virtualBoard.CurrentFEN.split("").reverse().join("");
 
-    console.log(reversedFEN);
-
-    virtualBoard.GenerateBoardFromFEN(reversedFEN);
-    physicalBoard.RenderBoard();
-
-    startingFEN = reversedFEN;
+    
+    console.log(virtualBoard.CurrentFEN)
 };
 
 

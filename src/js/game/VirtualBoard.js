@@ -32,11 +32,13 @@ export class VirtualBoard{
 
     GenerateBoardFromFEN(FEN)
     {
-        this.CurrentFEN = FEN;
+        this.CurrentFEN = FEN.split(" ")[0]
 
         this.pieces = new Array(64).fill(null);
 
+
         let PositionsFEN = FEN.split(" ")[0].split("/");
+
         let counter = 0;
 
         for(let Row of PositionsFEN)
@@ -59,6 +61,7 @@ export class VirtualBoard{
                 }
             }
         }
+
 
         this.calculateLegalMoves()
         console.log(this.pieces)
