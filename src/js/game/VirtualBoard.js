@@ -4,6 +4,8 @@ import { Rook } from "./pieces/Rook.js"
 import { Queen } from "./pieces/Queen.js"
 import { King } from "./pieces/King.js"
 import { Pawn } from "./pieces/Pawn.js"
+import { callAPI } from "../../../Backend/game/js/Stockfish.js"
+import { Helper } from "./Helpers.js";
 
 
 const piecesClasses = {
@@ -21,13 +23,17 @@ export class VirtualBoard{
     pieces = []
     isWhiteTurn = null
 
+    gameMode = null
 
     CurrentFEN = null;
+
+    physicalBoard = null
 
     constructor()
     {
         this.pieces = new Array(64).fill(null);
         this.isWhiteTurn = true;
+        this.gameMode = document.body.getAttribute("mode");
     }
 
     GenerateBoardFromFEN(FEN)
@@ -103,6 +109,8 @@ export class VirtualBoard{
 
             this.isWhiteTurn = !this.isWhiteTurn
 
+            this.requestNextMove();
+
             return true;
         }
             
@@ -162,6 +170,29 @@ export class VirtualBoard{
     getPieceAt(Index)
     {
         return this.pieces[Index]
+    }
+
+    requestNextMove()
+    {
+        if(this.gameMode === "local" && !this.isWhiteTurn)
+        {
+            
+            
+            callAPI(this.CurrentFEN + " b - - 0 1", 12).then(response =>{
+                let moves = response.split("")
+
+                console.log(moves)
+
+                let fileFrom = moves[0].charCodeAt(0) - 97
+                let fileTo = moves[2].charCodeAt(0) - 97
+
+                
+                let rankFrom = 8 - parseInt(moves[1])
+                let rankTo = 8 - parseInt(moves[3])
+
+                this.physicalBoard.startPieceMoveAnimation(piece, fileFrom, rankFrom, fileTo, rankTo, 200)
+            })
+        }
     }
          
 }

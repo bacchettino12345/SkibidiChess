@@ -114,9 +114,8 @@ export class PhysicalBoard
     }
 
 
-    isPlayerMove(clickedSquare){
-
-        console.log(this.virtualBoard.pieces[clickedSquare].isWhite)
+    isPlayerMove(clickedSquare)
+    {
 
         if(this.virtualBoard.pieces[clickedSquare].isWhite !== this.virtualBoard.isWhiteTurn)
         {
@@ -462,7 +461,7 @@ export class PhysicalBoard
     resizeBoard()
     {
 
-        if(window.innerHeight > 300 )
+        if(window.innerHeight > 400 )
         {
 
             this.boardWidth = window.innerHeight - 120;
