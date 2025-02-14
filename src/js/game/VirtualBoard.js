@@ -176,9 +176,8 @@ export class VirtualBoard{
     {
         if(this.gameMode === "local" && !this.isWhiteTurn)
         {
-            
-            
-            callAPI(this.CurrentFEN + " b - - 0 1", 12).then(response =>{
+               
+            callAPI(this.CurrentFEN + " b - - 0 1", 15).then(response =>{
                 let moves = response.split("")
 
                 console.log(moves)

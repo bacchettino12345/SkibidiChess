@@ -10,49 +10,73 @@
     <script type="module" src="../src/js/game/Main2.js"></script>
 </head>
 
-<body class="flex flex-row bg-[#302E2B]" mode="local">
+<body class="flex flex-wrap bg-[#302E2B] justify-center" mode="local" >
     
-    <div id="ChessPanel" class="ml-[10vw] mt-[1vw]">
+    <div id="ChessPanel" class=" mt-[1vw] bg-amber-300">
 
-        <div id="PlayerInfo" class="flex flex-row  mb-[0.1vw]">
+        <div id="PlayerInfo" class="flex flex-row items-center mb-[0.3vh] h-[4.5vh] bg-amber-500 ">
 
-            <img src="../Assets/Images/ImgPlaceholder.jpg" id="PlayerImg" class="w-[2vw] h-[2vw] rounded-[0.2vw]">
+            <img src="../Assets/Images/ImgPlaceholder.jpg" id="PlayerImg" class="w-[4vh] h-[4vh] rounded-[0.2vw]">
 
             <div id="nameInfo" class="ml-[0.5vw]">
-                <h2 id="PlayerName" class="text-neutral-50 font-bold">Player Name</h2>
-                <h2 id="MaterialCount" >ciao</h2>
+                <h2 id="PlayerName" class="text-neutral-50 font-bold text-[2vh] h-fit">Player Name</h2>
+                <h2 id="MaterialCount" class="text-[1.5vh]">ciao</h2>
             </div>
 
         </div>
 
         <canvas id="ChessBoard" class="rounded-[0.3vw]"></canvas>
 
-        <div id="PlayerInfo" class="flex flex-row mt-[0.5vw]">
+        <div id="PlayerInfo" class="flex flex-row items-center mt-[0.3vh] h-[4.5vh] bg-amber-600">
 
-            <img src="../Assets/Images/ImgPlaceholder.jpg" id="PlayerImg" class="w-[2vw] h-[2vw] rounded-[0.2vw]">
+            <img src="../Assets/Images/ImgPlaceholder.jpg" id="PlayerImg" class="w-[4vh] h-[4vh] rounded-[0.2vw]">
 
             <div id="nameInfo" class="ml-[0.5vw]">
-                <h2 id="PlayerName" class="text-neutral-50 font-bold">Player Name</h2>
-                <h2 id="MaterialCount" >ciao</h2>
+                <h2 id="PlayerName" class="text-neutral-50 font-bold text-[2vh]">Player Name</h2>
+                <h2 id="MaterialCount" class="text-[1.5vh]">ciao</h2>
             </div>
 
         </div>
+
     </div>
+    
+    <div id="GameInfo" class=" flex flex-col items-center mt-[2vh] lg:ml-[5vw] lg:w-[250px]  bg-amber-700 sm:w-[90vw]">
+        <h1 class="">Gioca coi bot</h1>
 
-    <div id="GameInfo" class="ml-[5vw] mt-[2vw] w-[10vw]">
-        <h1>Gioca coi bot</h1>
+        <div class="radio-inputs lg:w-full sm:w-[24vw] mt-[1vh]">
 
-        <div id="Bots" class="flex flex-row  h-[5vw] gap-[0.5vw]">
-            <button><img src="../Assets/Images/ImgPlaceholder.jpg" class="rounded-[0.2vw]" ></button>
-            <button><img src="../Assets/Images/ImgPlaceholder.jpg" class="rounded-[0.2vw]" ></button>
-            <button><img src="../Assets/Images/ImgPlaceholder.jpg" class="rounded-[0.2vw]" ></button>
-            <button><img src="../Assets/Images/ImgPlaceholder.jpg" class="rounded-[0.2vw]" ></button>
+            <label class="radio">
+              <input type="radio" name="radio" checked="">
+              <span class="name">HTML</span>
+            </label>
+
+            <label class="radio">
+              <input type="radio" name="radio">
+              <span class="name">React</span>
+            </label>
+                
+            <label class="radio">
+              <input type="radio" name="radio">
+              <span class="name">Vue</span>
+            </label>
+
+            <label class="radio">
+                <input type="radio" name="radio">
+                <span class="name">Vue</span>
+            </label>
+
+            <label class="radio">
+              <input type="radio" name="radio">
+              <span class="name">Vue</span>
+            </label>
+
         </div>
 
-        <button id="Suggestion" class="GreenBtn">Suggestion</button>
+        <button id="Suggestion" class="GreenBtn sm:w-[24vw] lg:w-[16vh] lg:h-[5vh] sm:h-[3rem] text-[1.5vh]  mt-[1vh]">Suggestion</button>
 
-        <button id="ReverseBoard" class="GreenBtn" onclick="Reverseboard()">Reverse</button>
+        <button id="ReverseBoard" class="GreenBtn sm:w-[24vw] lg:w-[16vh] lg:h-[5vh] sm:h-[3vh] text-[1.5vh] mt-[2vh]" onclick="Reverseboard()">Reverse</button>
     </div>
+
 
     
 

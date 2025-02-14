@@ -12,7 +12,7 @@
         font-size: 12px;
         font-weight: 700;
         color: #fff;
-        border-radius: 5px;
+        border-radius: 0.5vh;
         transition: all ease 0.1s;
         box-shadow: 0px 7px 0px 0px #739552;
         filter: drop-shadow(0px 55px 35px rgba(0,0,0,0.25));
@@ -60,6 +60,50 @@
         cursor: pointer;
         filter: drop-shadow(0px 30px 35px rgba(0,0,0,0.25));
         transition: all 0.1s;
+    }
+
+
+
+
+
+
+    .radio-inputs {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 0.5rem;
+        background-color: #EEE;
+        box-sizing: border-box;
+        box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+        padding: 0.25rem;
+        font-size: 14px;
+        filter: drop-shadow(0px 12px 35px rgba(0,0,0,0.25));
+    }
+    
+    .radio-inputs .radio {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+    
+    .radio-inputs .radio input {
+        display: none;
+    }
+    
+    .radio-inputs .radio .name {
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        border: none;
+        padding: .5rem 0;
+        color: rgba(51, 65, 85, 1);
+        transition: all .15s ease-in-out;
+    }
+    
+    .radio-inputs .radio input:checked + .name {
+        background-color: #fff;
+        font-weight: 600;
     }
 
 }

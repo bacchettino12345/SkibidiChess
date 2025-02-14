@@ -461,16 +461,16 @@ export class PhysicalBoard
     resizeBoard()
     {
 
-        if(window.innerHeight > 400 )
+        if(window.innerHeight < window.innerWidth)
         {
+            this.boardWidth = window.innerHeight - 160;
+            this.boardHeight = window.innerHeight - 160;
 
-            this.boardWidth = window.innerHeight - 120;
-            this.boardHeight = window.innerHeight - 120;
         }
-        else
+        else if(window.innerWidth < window.innerHeight )
         {
-            this.boardWidth = 300;
-            this.boardHeight = 300;
+            this.boardWidth = window.innerWidth - 160;
+            this.boardHeight = window.innerWidth - 160;
         }
 
         this.boardElement.width = this.boardWidth;
