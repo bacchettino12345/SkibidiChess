@@ -12,8 +12,8 @@ const physicalBoard = new PhysicalBoard(virtualBoard);
 
 
 window.Reverseboard = function () {
-
-    
+    physicalBoard.isFlipped = !physicalBoard.isFlipped;
+    physicalBoard.RenderBoard();
     console.log(virtualBoard.CurrentFEN)
 };
 

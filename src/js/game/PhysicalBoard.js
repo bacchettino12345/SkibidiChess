@@ -71,8 +71,14 @@ export class PhysicalBoard
     {
         const rect = this.boardElement.getBoundingClientRect();
 
-        const x = event.clientX - rect.left ;
-        const y = event.clientY - rect.top ;
+        let x = event.clientX - rect.left ;
+        let y = event.clientY - rect.top ;
+
+        if(this.isFlipped)
+        {
+            x = this.boardWidth - x;
+            y = this.boardHeight - y;
+        }
 
         let clickedSquare = Helper.coordsToIndex(x, y, this.squareWidth, this.squareHeight);
         
@@ -90,7 +96,7 @@ export class PhysicalBoard
             if(this.virtualBoard.canPieceMove(this.selectedSquare, clickedSquare))
             {
                 let startCoords = Helper.to2D(this.selectedSquare);
-                let endCoords = Helper.to2D(clickedSquare);
+                let endCoords =  Helper.to2D(clickedSquare);
 
 
                 this.startPieceMoveAnimation(this.virtualBoard.pieces[this.selectedSquare], startCoords[1], startCoords[0], endCoords[1], endCoords[0], 100 );
@@ -115,8 +121,14 @@ export class PhysicalBoard
     {
         const rect = this.boardElement.getBoundingClientRect();
 
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+        let x = event.clientX - rect.left;
+        let y = event.clientY - rect.top;
+
+        if(this.isFlipped)
+        {
+            x = this.boardWidth - x;
+            y = this.boardHeight - y;
+        }
 
         this.hoverSquare(Helper.coordsToIndex(x, y, this.squareWidth, this.squareHeight));        
     }
@@ -179,6 +191,12 @@ export class PhysicalBoard
 
                 const coords = Helper.to2D(legalMove);
 
+                if(this.isFlipped)
+                {
+                    coords[1] = 7 - coords[1];
+                    coords[0] = 7 - coords[0];
+                }
+
                 const hasPiece = this.virtualBoard.getPieceAt(legalMove) !== null;
                 const radius = this.animatingCircles.get(legalMove) || 15;
     
@@ -219,12 +237,15 @@ export class PhysicalBoard
             
                     const spriteX = pieceIndex * 45 + color;
                     const spriteY = 0; 
+
+                    let drawX = this.isFlipped ? (7 - j) * this.squareWidth : j * this.squareWidth
+                    let drawY = this.isFlipped ? (7 - i) * this.squareHeight : i * this.squareHeight
             
                     this.ctx.drawImage(
                         this.SpriteSheet,
                         spriteX, spriteY,
                         45, 45,
-                        j * this.squareWidth, i * this.squareHeight,
+                        drawX, drawY,
                         this.squareWidth, this.squareHeight
                     );
                 }
@@ -262,6 +283,12 @@ export class PhysicalBoard
         // Handle piece highlighting
         const position = Helper.to2D(squareIndex);
 
+        if(this.isFlipped)
+        {
+            position[1] = 7 - position[1];
+            position[0] = 7 - position[0];
+        }
+
         if (this.virtualBoard.getPieceAt(squareIndex) !== null && prevHovered !== squareIndex) 
         {
             this.ctx.strokeStyle = "rgb(255, 255, 255)";
@@ -277,6 +304,12 @@ export class PhysicalBoard
         for(let square of this.HighlightedSquares)
         {
             let position = Helper.to2D(square)
+
+            if(this.isFlipped)
+            {
+                position[1] = 7 - position[1];
+                position[0] = 7 - position[0];
+            }
 
             this.ctx.fillStyle = "rgba(255, 255, 0, 0.4)";
             this.ctx.fillRect(position[1] * this.squareWidth, position[0] * this.squareHeight, this.squareWidth, this.squareHeight);
@@ -312,7 +345,9 @@ export class PhysicalBoard
 
                 this.RenderBoard();
 
-                this.drawPieceAtCoords(piece, currentX, currentY);
+
+                this.isFlipped ? this.drawPieceAtCoords(piece,  currentX, currentY) : this.drawPieceAtCoords(piece, 7-  currentX, 7-  currentY) 
+                    
             },
 
             onComplete: () => {
@@ -381,6 +416,9 @@ export class PhysicalBoard
 
     drawPieceAtCoords(piece, currentX, currentY)
     {
+        currentX = 7 - currentX;
+        currentY = 7 - currentY;
+
         const pieceOrder = ["p", "n", "b", "r", "q", "k"];
         const pieceIndex = pieceOrder.indexOf(piece.type.toLowerCase());
 
