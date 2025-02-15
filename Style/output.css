@@ -893,6 +893,9 @@
   .h-fit {
     height: fit-content;
   }
+  .h-full {
+    height: 100%;
+  }
   .h-screen {
     height: 100vh;
   }
@@ -959,11 +962,14 @@
   .w-\[50px\] {
     width: 50px;
   }
-  .w-\[90vw\] {
-    width: 90vw;
-  }
   .w-\[100px\] {
     width: 100px;
+  }
+  .w-\[10rem\] {
+    width: 10rem;
+  }
+  .w-\[90vw\] {
+    width: 90vw;
   }
   .w-\[200px\] {
     width: 200px;
@@ -1946,6 +1952,9 @@
   .text-\[1\.5vh\] {
     font-size: 1.5vh;
   }
+  .text-\[1rem\] {
+    font-size: 1rem;
+  }
   .text-\[1vw\] {
     font-size: 1vw;
   }
@@ -2531,6 +2540,11 @@
       height: 80vh;
     }
   }
+  .sm\:w-\[12rem\] {
+    @media (width >= 40rem) {
+      width: 12rem;
+    }
+  }
   .sm\:w-\[24vw\] {
     @media (width >= 40rem) {
       width: 24vw;
@@ -2554,6 +2568,26 @@
   .sm\:bg-amber-300 {
     @media (width >= 40rem) {
       background-color: var(--color-amber-300);
+    }
+  }
+  .md\:ml-\[5vw\] {
+    @media (width >= 48rem) {
+      margin-left: 5vw;
+    }
+  }
+  .md\:h-\[80vh\] {
+    @media (width >= 48rem) {
+      height: 80vh;
+    }
+  }
+  .md\:w-\[15rem\] {
+    @media (width >= 48rem) {
+      width: 15rem;
+    }
+  }
+  .md\:flex-row {
+    @media (width >= 48rem) {
+      flex-direction: row;
     }
   }
   .lg\:h-\[5vh\] {
