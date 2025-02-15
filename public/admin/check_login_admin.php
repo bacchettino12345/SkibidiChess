@@ -8,7 +8,7 @@
     else
     {
         if(!isset($_SESSION['admin'])){
-            header("Location: ./not_autorized.html");
+            header("Location: ./not_autorized.php");
         }
     }
 ?>

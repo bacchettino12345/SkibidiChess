@@ -1,7 +1,6 @@
 <?php
     require './check_login_admin.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +11,7 @@
 </head>
 <body class="bg-[#302E2B] w-[70%] mx-auto">
     <div class="flex justify-center items-center mt-[2vh] gap-4">
-        <img src="../../Assets/Images/Logo.png" alt="logo" class="w-[20%]">
+        <img src="../../Assets/Images/Logo.png" alt="logo" class="w-[225px]">
         <hr class="bg-white h-[50px] w-[2px]">
         <p class="text-white text-3xl"><i>Administration Panel</i></p>        
     </div>
@@ -28,22 +27,6 @@
                     <td>LMy</td>
                     <td>FEN</td>
                 </tr>
-                <?php
-                require '../../Backend/db_connection.php';
-                $sql = "SELECT * FROM tokens";
-                $result = $conn->query($sql);
-                if ($result) {
-                    while($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                        echo "<tr>";
-                        echo "<td>".$row['id']."</td>";
-                        echo "<td>".$row['date']."</td>";
-                        echo "<td>".$row['last_move_x']."</td>";
-                        echo "<td>".$row['last_move_y']."</td>";
-                        echo "<td>".$row['fen']."</td>";
-                        echo "</tr>";
-                    }
-                }
-                ?>
             </table>
         </div>
     </div>
