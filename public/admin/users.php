@@ -9,6 +9,15 @@
     <title>SkibidiChess :: Administration</title>
     <link rel="stylesheet" href="../../Style/output.css">
     <script src="../../Backend/admin/js/script.js"></script>
+    <script>
+        function deleteUserBtn()
+        {
+            if(confirm("Are you sure?"))
+            {
+                deleteUser(document.getElementById("deleteUserUsername"));
+            }
+        }
+    </script>
 </head>
 <body class="bg-[#302E2B] w-[70%] mx-auto">
 <div class="flex justify-center items-center mt-[2vh] gap-4">
@@ -143,9 +152,9 @@
                     class="bg-[#22201e] px-2 py-1 outline-none text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#b92828] border-[#1c1a19]"
                     name="user"
                     placeholder="Delete User"
-                    id="username"
+                    id="deleteUserUsername"
                     type="text">
-                <button id="deleteUser" class="RedBtn py-1 mb-[0.625vh]">Delete</button>
+                <button id="deleteUser" class="RedBtn py-1 mb-[0.625vh]" onclick="deleteUserBtn()">Delete</button>
             </div>
         </div>
     </div>
