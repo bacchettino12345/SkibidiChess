@@ -13,21 +13,27 @@
         function deleteUserBtn()
         {
             user = document.getElementById("deleteUserUsername").value;
-            if(confirm("Are you sure?"))
-            {
-                if(checkUserExistance(user))
+            if(user != "")
+            {   
+                if(confirm("Are you sure?"))
                 {
-                    if(user != "")
-                    {
-                        deleteUser(document.getElementById("deleteUserUsername").value);
-                    } else
-                    {
-                        alert("Insert an username");
-                    }
-                } else
-                {
-                    alert("User does not exist.")
+                    checkUserExistance(user).then(exists =>
+                        {
+                            if(exists)
+                            {
+                                deleteUser(user); 
+                            }
+                            else
+                            {
+                                alert("User does not exist.")
+                            }
+                        }
+                    )
                 }
+            }
+            else
+            {
+                alert("Username not specified.");
             }
         }
 
@@ -37,17 +43,27 @@
             pts  = document.getElementById('managePointsPts').value;
             if(user != "")
             {
-                if(pts != "")
-                {
-                    setPoints(user, pts);
-                }else
-                {
-                    alert("Pts. number not specified");
+                checkUserExistance(user).then(exists => {
+                    console.log(exists);
+                    if(exists)
+                    {
+                        if(pts != "")
+                        {
+                            setPoints(user, pts);
+                        }else
+                        {
+                            alert("Pts. number not specified");
+                        } 
+                    } else
+                    {
+                        alert("User does not exist.")
+                    }
                 }
+                )
             }
             else
             {
-                alert("Username not specified");
+                alert("Username not specified.");
             }
         }
 
@@ -144,44 +160,28 @@
     <div id="deactivateUser" class="text-white w-full mx-auto mt-[2vh]">
         <p class="text-white text-3xl">Account Activation Status</p>
         <div class="mt-[2vh] p-[20px] bg-[#1c1a19] rounded-[10px] w-full flex items-center gap-2">
-            <label class="text-white">Deactivate User:</label>
+            <label class="text-white">Username:</label>
             <input
                 class="bg-[#22201e] px-2 py-1 outline-none text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#b92828] border-[#1c1a19]"
                 placeholder="Deativate User"
                 id="username"
                 type="text">
             <button id="deleteUser" class="RedBtn py-1 mb-[0.625vh]">Deactivate</button>
-        </div>
-        <div class="mt-[2vh] p-[20px] bg-[#1c1a19] rounded-[10px] w-full flex items-center gap-2">
-            <label class="text-white">Activate User:</label>
-            <input
-                class="bg-[#22201e] px-2 py-1 outline-none text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#b92828] border-[#1c1a19]"
-                placeholder="Ativate User"
-                id="username"
-                type="text">
-            <button id="deleteUser" class="RedBtn py-1 mb-[0.625vh]">Activate</button>
-        </div>
+            <button id="deleteUser" class="GreenBtn py-1 mb-[0.625vh]">Activate</button>
+    </div>
     </div>
     <div id="makeAdmin" class="text-white w-full mx-auto mt-[2vh]">
     <p class="text-white text-3xl">Manage Admin Privileges</p>
         <div class="mt-[2vh] p-[20px] bg-[#1c1a19] rounded-[10px] w-full flex items-center gap-2">
-            <label class="text-white">Enter User to Promote:</label>
+            <label class="text-white">Enter User:</label>
             <input
                 class="bg-[#22201e] px-2 py-1 outline-none text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#b92828] border-[#1c1a19]"
                 placeholder="Username"
                 id="username"
                 type="text">
-            <button id="deleteUser" class="RedBtn py-1 mb-[0.625vh]">Give Admin PrivS</button>
-    </div>
-        <div class="mt-[2vh] p-[20px] bg-[#1c1a19] rounded-[10px] w-full flex items-center gap-2">
-            <label class="text-white">Enter User to revoke PrivS:</label>
-            <input
-                class="bg-[#22201e] px-2 py-1 outline-none text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#b92828] border-[#1c1a19]"
-                placeholder="Username"
-                id="username"
-                type="text">
+            <button id="deleteUser" class="GreenBtn py-1 mb-[0.625vh]">Give Admin PrivS</button>
             <button id="deleteUser" class="RedBtn py-1 mb-[0.625vh]">Revoke Admin PrivS</button>
-        </div>
+    </div>
     </div>
     <div id="addUser" class="text-white w-full mx-auto mt-[2vh] mb-10">
         <p class="text-white text-3xl">Add Users</p>

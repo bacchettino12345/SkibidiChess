@@ -7,20 +7,20 @@
 
     if ($data) {
         $user = $data['username'];
+        $priv = $data['privilege'];
         try
         {
-            $seachParam = "%" . $user . "%";
-            $sql = "SELECT * FROM accounts WHERE user LIKE :search";
+            $sql = "UPDATE accounts SET admin = :priv WHERE user = :user";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':search', $seachParam, PDO::PARAM_STR);
+            $stmt->bindParam(':user', $user);
+            $stmt->bindParam(':priv', $priv);
             $stmt->execute();
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode(['users' => $users, 'success' => true]);
-        } 
+            echo json_encode(['success' => true]);
+        }
         catch(PDOException $e)
         {
-            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            echo json_encode(['success' => false, 'error' => $e]);
         }
     }
-    
+
 ?>

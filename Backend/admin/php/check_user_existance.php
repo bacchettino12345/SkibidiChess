@@ -16,7 +16,8 @@
         $sql = "SELECT * FROM accounts WHERE user = :user";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':user', $user);
-        $result = $stmt->execute();
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if($result)
         {
             echo json_encode(['success' => true, 'status' => true]);

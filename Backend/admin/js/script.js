@@ -1,6 +1,6 @@
 function checkUserExistance(user)
 {
-    fetch('../../Backend/admin/php/check_user_existance.php',
+    return fetch('../../Backend/admin/php/check_user_existance.php',
         {
             method: 'POST',
             headers: 
@@ -16,12 +16,12 @@ function checkUserExistance(user)
         {
             alert("Error checking user existance: " + data.error);
         }
-
         return data.status;
     })
     .catch(error =>
     {
-        console.log(error);    
+        console.log(error);
+        return false;
     }
     );
 }
@@ -98,4 +98,35 @@ function setPoints(user, pts)
         console.log("Error: ", error);
     }
     );
+}
+
+function manageAdmin(user, priv)
+{
+    fetch('../../Backend/admin/php/manage_admin.php', 
+        {
+            method: 'POST',
+            headers:
+            {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({username: user, privilege: priv})
+        }
+    )
+    .then(response => response.json())
+    .then(data => {
+        if(data.success)
+        {
+            alert("Operation Success");
+        }
+        else
+        {
+            alert("Error performing the operation: " + data.error)
+        }
+    }
+    )
+    .catch(error =>
+    {
+        console.log("Error: " + error);
+    }
+    )
 }
