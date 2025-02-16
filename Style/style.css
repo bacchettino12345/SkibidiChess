@@ -92,6 +92,7 @@
     .radio-inputs .radio .name {
         display: flex;
         cursor: pointer;
+        height: 100%;
         align-items: center;
         justify-content: center;
         border-radius: 0.5rem;
@@ -104,6 +105,16 @@
     .radio-inputs .radio input:checked + .name {
         background-color: #fff;
         font-weight: 600;
+    }
+
+
+    .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 
 }
