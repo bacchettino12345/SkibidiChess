@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../Style/output.css">
     <script src="../Backend/auth/js/script.js"></script>
     <link rel="shortcut icon" href="../Assets/Images/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body class="bg-[#302E2B]">
     <script> 
@@ -32,12 +33,22 @@
             id="username"
             type="text"/>
         <p class="text-neutral-50 pb-1 pl-0.5">Password</p>
-        <input
-            class="mb-3 bg-[#22201e] px-4 py-3 outline-none w-[100%] text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#81b64c] border-[#1c1a19]"
+        <div class="relative mb-3">
+            <input
+            class="bg-[#22201e] px-4 py-3 outline-none w-[100%] text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#81b64c] border-[#1c1a19]"
             name="psswd"
             placeholder="Enter your password"
             id="password"
             type="password"/>
+            <span onclick="togglePasswordVisibility()" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;"><i class="fa fa-eye" style="font-size:24px;color: rgb(170, 170, 170); margin-right: 10px;"></i></span>
+        </div>
+
+    <script>
+        function togglePasswordVisibility() {
+        const pwd = document.getElementById('password');
+        pwd.type = pwd.type === 'password' ? 'text' : 'password';
+        }
+    </script>
         <div role="alert" class="mt-1 mb-1" style="display: none;" id="wce">
             <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
                 Warning

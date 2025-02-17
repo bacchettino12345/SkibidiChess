@@ -14,7 +14,7 @@ function checkUserExistance(user)
     .then(data => {
         if(!data.success)
         {
-            alert("Error checking user existance: " + data.error);
+            alert(">> Error checking user existance >>" + data.error);
         }
         return data.status;
     })
@@ -38,9 +38,9 @@ function deleteUser(user)
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('User deleted successfully');
+            alert('>> Operation /DeleteUser/ Success');
         } else {
-            alert('Error deleting user: ' + data.error);
+            alert('>> Error during operation /DeleteUser/ >>' + data.error);
         }
     })
     .catch(error => {
@@ -86,10 +86,10 @@ function setPoints(user, pts)
         console.log(data.success);
         if(data.success)
         {
-            alert("Operation Success");
+            alert(">> Operation - Set Points - Success");
         } else
         {
-            alert("Error setting new value: " + data.error);
+            alert(">> Error during operation - Set Points - >>" + data.error);
         }
     }
     )
@@ -116,11 +116,11 @@ function manageAdmin(user, priv)
     .then(data => {
         if(data.success)
         {
-            alert("Operation Success");
+            alert(">> Operation - Manage Privileges - Success");
         }
         else
         {
-            alert("Error performing the operation: " + data.error)
+            alert(">> Error during operation - Manage Privileges - >>" + data.error)
         }
     }
     )
