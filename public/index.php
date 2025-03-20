@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="../Style/output.css">
     
 </head>
+
 <body class="bg-[#302E2B]">
     <div id="Home" class="flex justify-center items-center min-h-screen flex-col">
-            <img src="../Assets/Images/Logo.png" class="w-[40vw] mb-[1vw] mt-[2vw] drop-shadow-[0_77px_35px_rgba(0,0,0,0.25)]">
+            <img src="../Assets/Images/Logo.png" class="w-[40vw] mb-[1vw] drop-shadow-[0_77px_35px_rgba(0,0,0,0.25)]">
             <div id="UserInfo" class="text-white text-2xl mb-[5vh]">
                 Logged in as: <span id="username"></span>
             </div>
@@ -54,6 +55,7 @@
                         $admin = false;
                     $user = $_SESSION['user'];
                 }
+
             ?>
         <script>
             let user = "<?php echo $user; ?>";
@@ -71,6 +73,7 @@
                 enableAdmin();
             }
             document.getElementById("username").innerText = user;
+
         </script>
 </body>
 </html>

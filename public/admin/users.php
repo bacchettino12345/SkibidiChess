@@ -68,9 +68,10 @@ require './check_login_admin.php';
                                 const row = usersTable.insertRow();
                                 row.insertCell(0).textContent = user.id;
                                 row.insertCell(1).textContent = user.user;
-                                row.insertCell(2).textContent = user.active;
-                                row.insertCell(3).textContent = user.admin;
-                                row.insertCell(4).textContent = user.pts;
+                                row.insertCell(2).textContent = user.mail;
+                                row.insertCell(3).textContent = user.active;
+                                row.insertCell(4).textContent = user.admin;
+                                row.insertCell(5).textContent = user.pts;
                             });
                         }
                     }).catch(error => {
@@ -104,6 +105,7 @@ require './check_login_admin.php';
                     <tr>
                         <td>ID</td>
                         <td>User</td>
+                        <td>Email</td>
                         <td>isActive?</td>
                         <td>isAdmin?</td>
                         <td>PTS</td>
