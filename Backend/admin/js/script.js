@@ -14,14 +14,18 @@ function checkUserExistance(user)
     .then(data => {
         if(!data.success)
         {
+            // admin version (w/ alert)
             alert(">> Error checking user existance >>" + data.error);
         }
-        return data.status;
+        else
+        {
+            return data.status;
+        }
     })
     .catch(error =>
     {
+        alert("Error: " + data.error);
         console.log(error);
-        return false;
     }
     );
 }

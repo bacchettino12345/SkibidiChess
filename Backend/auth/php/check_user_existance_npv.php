@@ -1,5 +1,5 @@
 <?php
-    // agg controllo dappertutto
+
     require "../../db_connection.php";
 
     header('Content-Type: application/json');
