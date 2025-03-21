@@ -23,4 +23,5 @@ export class Helper{
 
         return this.toLinear([yPos, xPos]);
     }
+
 }

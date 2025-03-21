@@ -8,6 +8,7 @@ export class PhysicalBoard
     animatingCircles = new Map(); // Track radius for each square
     activeAnimations = new Map(); // Track active animations per square
 
+    renderSuggestion = null;
 
     boardElement = null;
     ctx = null;
@@ -43,6 +44,9 @@ export class PhysicalBoard
 
     animationMenager = null;
 
+
+    squareFrom = null;
+    squareTo = null;
 
     constructor(virtualBoard)
     {
@@ -159,6 +163,7 @@ export class PhysicalBoard
         this.drawBoardCoords();
         this.drawPossibleMoves(radius, legalMove);
         this.HighlightSquare();
+        this.suggestionSquares();
         this.drawPieces();
     }
 
@@ -337,6 +342,28 @@ export class PhysicalBoard
         }
     }
 
+    suggestionSquares()
+    {
+        if(this.renderSuggestion)
+        {
+
+            if(this.isFlipped)
+            {
+                this.squareFrom[1] = 7 - this.squareFrom[1];
+                this.squareFrom[0] = 7 - this.squareFrom[0];
+
+                this.squareTo[1] = 7 - this.squareTo[1];
+                this.squareTo[0] = 7 - this.squareTo[0];
+            }
+                
+            this.ctx.fillStyle = "rgba(255, 0, 0, 0.4)";
+            this.ctx.fillRect(this.squareFrom[1] * this.squareWidth, this.squareFrom[0] * this.squareHeight, this.squareWidth, this.squareHeight);
+
+            this.ctx.fillStyle = "rgba(255, 0, 0, 0.4)";
+            this.ctx.fillRect(this.squareTo[1] * this.squareWidth, this.squareTo[0] * this.squareHeight, this.squareWidth, this.squareHeight);
+        }
+    }
+
     selectSquare(SquareIndex)
     {
         
@@ -379,6 +406,7 @@ export class PhysicalBoard
                 let posIndex = Helper.toLinear([endY, endX])
                 this.virtualBoard.movePiece(piece.position, posIndex);
                 this.animatingCircles.delete(piece.position)
+                this.renderSuggestion = false;
                 this.RenderBoard();
             },
 

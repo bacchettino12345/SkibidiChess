@@ -171,6 +171,7 @@ export class VirtualBoard{
     {
         return this.pieces[Index]
     }
+    
 
     requestNextMove()
     {

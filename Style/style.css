@@ -117,4 +117,12 @@
         user-select: none;
     }
 
+    .pieces-icons{
+        background-image: url("../Assets/Images/captured-pieces.png");
+        background-repeat: no-repeat;
+    }
+
+
+    .captured-pieces-w-2-bishop{ background-position: -20px -600px ;}
+
 }
