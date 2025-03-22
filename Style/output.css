@@ -695,9 +695,6 @@
   .m-2 {
     margin: calc(var(--spacing) * 2);
   }
-  .m-10 {
-    margin: calc(var(--spacing) * 10);
-  }
   .mx-auto {
     margin-inline: auto;
   }
@@ -709,6 +706,9 @@
   }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
+  }
+  .mt-5 {
+    margin-top: calc(var(--spacing) * 5);
   }
   .mt-15 {
     margin-top: calc(var(--spacing) * 15);
@@ -890,9 +890,6 @@
   .h-\[4vh\] {
     height: 4vh;
   }
-  .h-\[5vw\] {
-    height: 5vw;
-  }
   .h-\[6vh\] {
     height: 6vh;
   }
@@ -905,8 +902,8 @@
   .h-\[5vh\] {
     height: 5vh;
   }
-  .h-full {
-    height: 100%;
+  .h-\[5vw\] {
+    height: 5vw;
   }
   .h-screen {
     height: 100vh;
@@ -934,6 +931,9 @@
   }
   .w-\[100\%\] {
     width: 100%;
+  }
+  .w-\[100px\] {
+    width: 100px;
   }
   .w-\[10rem\] {
     width: 10rem;
@@ -1656,14 +1656,23 @@
   .bg-\[var\(--my_variable\)\] {
     background-color: var(--my_variable);
   }
-  .bg-amber-200 {
-    background-color: var(--color-amber-200);
+  .bg-amber-300 {
+    background-color: var(--color-amber-300);
+  }
+  .bg-blue-400 {
+    background-color: var(--color-blue-400);
+  }
+  .bg-green-300 {
+    background-color: var(--color-green-300);
   }
   .bg-orange-500 {
     background-color: var(--color-orange-500);
   }
   .bg-red-100 {
     background-color: var(--color-red-100);
+  }
+  .bg-red-300 {
+    background-color: var(--color-red-300);
   }
   .bg-red-500 {
     background-color: var(--color-red-500);
@@ -2556,9 +2565,14 @@
       height: 85vh;
     }
   }
-  .lg\:w-\[20rem\] {
+  .lg\:h-screen {
     @media (width >= 64rem) {
-      width: 20rem;
+      height: 100vh;
+    }
+  }
+  .lg\:w-\[18vw\] {
+    @media (width >= 64rem) {
+      width: 18vw;
     }
   }
   .lg\:w-full {
@@ -2673,9 +2687,9 @@
   .pieces-icons {
     background-image: url("../Assets/Images/captured-pieces.png");
     background-repeat: no-repeat;
-  }
-  .captured-pieces-w-2-bishop {
-    background-position: -20px -600px;
+    background-size: 25vw 25vw;
+    background-position: 1px -2.4vw;
+    display: inline-block;
   }
 }
 @keyframes spin {

@@ -22,6 +22,7 @@ function resizeCanvas() {
 
 window.Reverseboard = function () {
     physicalBoard.isFlipped = !physicalBoard.isFlipped;
+
     physicalBoard.RenderBoard();
 };
 

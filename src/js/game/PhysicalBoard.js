@@ -164,6 +164,7 @@ export class PhysicalBoard
         this.drawPossibleMoves(radius, legalMove);
         this.HighlightSquare();
         this.suggestionSquares();
+
         this.drawPieces();
     }
 
@@ -342,25 +343,19 @@ export class PhysicalBoard
         }
     }
 
-    suggestionSquares()
-    {
-        if(this.renderSuggestion)
-        {
+    suggestionSquares() {
+        if (this.renderSuggestion) {
 
-            if(this.isFlipped)
-            {
-                this.squareFrom[1] = 7 - this.squareFrom[1];
-                this.squareFrom[0] = 7 - this.squareFrom[0];
-
-                this.squareTo[1] = 7 - this.squareTo[1];
-                this.squareTo[0] = 7 - this.squareTo[0];
-            }
-                
+            const getAdjustedCoords = (coords) => {
+                return this.isFlipped ? [7 - coords[1], 7 - coords[0]] : [coords[1], coords[0]];
+            };
+    
+            const [fromX, fromY] = getAdjustedCoords(this.squareFrom);
+            const [toX, toY] = getAdjustedCoords(this.squareTo);
+    
             this.ctx.fillStyle = "rgba(255, 0, 0, 0.4)";
-            this.ctx.fillRect(this.squareFrom[1] * this.squareWidth, this.squareFrom[0] * this.squareHeight, this.squareWidth, this.squareHeight);
-
-            this.ctx.fillStyle = "rgba(255, 0, 0, 0.4)";
-            this.ctx.fillRect(this.squareTo[1] * this.squareWidth, this.squareTo[0] * this.squareHeight, this.squareWidth, this.squareHeight);
+            this.ctx.fillRect(fromX * this.squareWidth, fromY * this.squareHeight, this.squareWidth, this.squareHeight);
+            this.ctx.fillRect(toX * this.squareWidth, toY * this.squareHeight, this.squareWidth, this.squareHeight);
         }
     }
 
@@ -390,7 +385,7 @@ export class PhysicalBoard
 
                 let currentX = startX + (endX - startX) * progress;
                 let currentY = startY + (endY - startY) * progress;
-
+                
                 this.RenderBoard();
 
 

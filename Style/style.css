@@ -120,9 +120,13 @@
     .pieces-icons{
         background-image: url("../Assets/Images/captured-pieces.png");
         background-repeat: no-repeat;
+        background-size: 25vw 25vw;
+
+        background-position: 1px -2.4vw;
+        display: inline-block;
     }
 
 
-    .captured-pieces-w-2-bishop{ background-position: -20px -600px ;}
+
 
 }
