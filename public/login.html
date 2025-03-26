@@ -11,17 +11,20 @@
 </head>
 <body class="bg-[#302E2B]">
     <script> 
-        function validateInput(){
+        async function validateInput(){
             const regex = /^[a-zA-Z0-9_]{3,24}$/;
             if(document.getElementById('password').value == "" || document.getElementById('username').value == "" || regex.test(document.getElementById('username').value) == false){
                 document.querySelector('#nvc').style.display = "block";
                 document.querySelector('#wce').style.display = 'none';
             }
-            else
-            {    
-                checkLogin();
+            else 
+            {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                await handleLogin(username, password);
             }
         }
+
         </script>
     <img src="../Assets/Images/Logo.png" class="w-[25%] mb-[5vh] text-center mx-auto mt-28">
     <form id="auth" class="w-[450px] mx-auto mt-[5px] pb-[30px] p-[20px] bg-[#1c1a19] rounded-[10px]" onsubmit="event.preventDefault(); validateInput();">

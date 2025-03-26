@@ -1,84 +1,122 @@
-function checkLogin()
-{
-    let username = document.querySelector('#username').value;
-    let password = document.querySelector('#password').value;
-    
-    fetch('../Backend/auth/php/login_check.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username: username, password: password})
-    })
-    .then(response => response.text())  
-    .then(data => {
-        console.log(data);
-        if(data == true)
-        {
-            window.location.href = './index.php';
-        }
-        else
-        {
-            document.querySelector('#nvc').style.display = 'none';
-            document.querySelector('#wce').style.display = 'block';
-        }
-    })
-}
-
-function checkUserExistanceOnRegister(user)
-{
-    return fetch('../Backend/auth/php/check_user_existance_npv.php',
-        {
+async function checkLogin(username, password) {
+    try {
+        const response = await fetch('../Backend/auth/php/login_check.php', {
             method: 'POST',
-            headers: 
-            {
+            headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({username: user})
+            body: JSON.stringify({username: username, password: password})
+        });
+
+        if(!response.ok)
+            window.location.href = "./internal_error.html";
+        
+        const data = await response.json();
+
+        if (data.err_status) {
+            window.location.href = "./internal_error.html";
+        } else {
+            if (data.status === true) {
+               return true;
+            } else {
+                return false;
+            }
         }
-    )
-    .then(response => response.json())
-    .then(data => {
-        if(!data.success)
-        {
-            // redirect
-        }
-        else
-        {
-            return data.status;
-        }
-    })
-    .catch(error =>
-    {
-        // red
+    } catch (error) {
+        window.location.href = "./internal_error.html";
     }
-    );
 }
 
-function registerAccount()
-{
-    // not used yet
-    let username = document.querySelector('#username').value;
-    let password = document.querySelector('#password').value;
+
+async function handleLogin(username, password) {
+
+    const result = await checkLogin(username, password);
     
-    fetch('../Backend/auth/php/login_check.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username: username, password: password})
-    })
-    .then(response => response.text())  
-    .then(data => {
+    if (result) {
+        window.location.href = "./index.php";
+    } else {
+        document.querySelector('#wce').style.display = "block";
+        document.querySelector('#nvc').style.display = 'none';
+    }
+}
+
+
+
+async function checkUserExistanceOnRegister(user)
+{
+    try 
+    {
+        const response = await fetch('../Backend/auth/php/check_user_existance_npv.php',
+            {
+                method: 'POST',
+                headers: 
+                {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({username: user})
+            }
+        )
+    
+        if(!response.ok)
+            window.location.href = "./internal_error.html";
+    
+        const data = await response.json();
+    
+        return data.status;
+
+    }
+    catch(error)
+    {
+        window.location.href = "./internal_error.html";
+    }
+}
+
+
+async function registerAccount(username, password, email, firstname, lastname) {
+    try {
+
+        const response = await fetch('../Backend/auth/php/new_login.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username, 
+                password: password, 
+                email: email, 
+                firstname: firstname, 
+                lastname: lastname
+            })
+        });
+
+        if (!response.ok) {
+            window.location.href = "./internal_error.html";
+        }
+
+        
+        const data = await response.json();
         console.log(data);
-        if(data == true)
-        {
-            window.location.href = './index.php';
-        }
+
+        return data.success;
+
+    } catch (error) {
+        window.location.href = "./internal_error.html";
+    }
+}
+
+async function handleRegister(firstname, lastname, username, email, password)
+{
+    const result = await checkUserExistanceOnRegister(username);
+    if(result)
+    {
+        document.querySelector('#nvc').style.display = 'none';
+        document.querySelector('#exu').style.display = 'block';
+    }
+    else
+    {
+        if (await registerAccount(username, password, email, firstname, lastname))  
+            window.location.href = "./accountCreatedRedirect.html";
         else
-        {
-            document.querySelector('#nvc').style.display = 'none';
-            document.querySelector('#wce').style.display = 'block';
-        }
-    })
+            window.location.href = "./internal_error.html";
+    }
 }

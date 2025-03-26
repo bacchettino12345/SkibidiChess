@@ -19,14 +19,14 @@
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if($result)
         {
-            echo json_encode(['success' => true, 'status' => true]);
+            echo json_encode(['status' => true, 'err_status' => false]);
         }else
         {
-            echo json_encode(['success' => true, 'status' => false]);
+            echo json_encode(['status' => false, 'err_status' => false]);
         }
     }catch(PDOException $e)
     {
-        echo json_encode(['success' => false, 'error', $e]);
+        echo json_encode(['err_status' => true, 'error', $e]);
     }
 
 ?>

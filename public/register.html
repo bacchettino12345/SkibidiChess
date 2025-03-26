@@ -11,25 +11,18 @@
 </head>
 <body class="bg-[#302E2B]">
     <script> 
-        function validateInput(){
+        async function validateInput() {
             const regex = /^[a-zA-Z0-9_]{3,24}$/;
-            if(document.getElementById('password').value == "" || document.getElementById('username').value == "" || regex.test(document.getElementById('username').value) == false){
+            if(document.getElementById('password').value == "" || document.getElementById('username').value == "" || document.getElementById('firstname').value == "" || document.getElementById('lastname').value == "" || document.getElementById('email').value == ""  || regex.test(document.getElementById('username').value) == false){
                 document.querySelector('#nvc').style.display = "block";
                 document.querySelector('#exu').style.display = "none";
             }
             else 
-            {    checkUserExistanceOnRegister(document.getElementById('username').value).then(exists => {
-                    if (exists) {
-                        document.querySelector('#nvc').style.display = "none";
-                        document.querySelector('#exu').style.display = "block";
-                    } else {
-                        // crea account
-                    }
-                });
+            {
+                await handleRegister(document.getElementById('firstname').value, document.getElementById('lastname').value, document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value);
             }
-
         }
-        </script>
+    </script>
     <img src="../Assets/Images/Logo.png" class="w-[25%] mb-[5vh] text-center mx-auto mt-15">
     <form id="auth" class="w-[450px] mx-auto mt-[5px] p-[20px] pb-[25px] bg-[#1c1a19] rounded-[10px]" onsubmit="event.preventDefault(); validateInput();">
         <div class="flex space-x-4">
@@ -39,7 +32,7 @@
                     class="mb-3 bg-[#22201e] px-4 py-3 outline-none w-full text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#81b64c] border-[#1c1a19]"
                     name="user"
                     placeholder="Enter your name"
-                    id="name"
+                    id="firstname"
                     type="text"/>
             </div>
             <div class="w-1/2">
@@ -48,7 +41,7 @@
                     class="mb-3 bg-[#22201e] px-4 py-3 outline-none w-full text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#81b64c] border-[#1c1a19]"
                     name="user"
                     placeholder="Enter your surname"
-                    id="surname"
+                    id="lastname"
                     type="text"/>
             </div>
         </div>
