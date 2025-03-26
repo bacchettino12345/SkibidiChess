@@ -1,4 +1,29 @@
 <?php
+
+    function getClientIP() {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
+    }
+
+    function registerLogin($conn, $id)
+    {
+        // AGGIUNGI LOGIN AL REGISTRO
+        $ip = getClientIP();
+        $time = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO access_logs (user_id, ip, time) VALUES (:id, :ip, :time)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':ip', $ip);
+        $stmt->bindParam(':time', $time);
+        $stmt->execute();
+    }
+
     require '../../db_connection.php';
     header('Content-Type: application/json');
     $data = json_decode(file_get_contents("php://input"), true);
@@ -20,6 +45,10 @@
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if($result)
         {
+
+            registerLogin($conn, $result['id']);
+
+            // INIZIALIZZA LA SESSIONE
             $_SESSION['user'] = $user;
             $_SESSION['psswd'] = $psswd;
             if($result['admin'] == 1)

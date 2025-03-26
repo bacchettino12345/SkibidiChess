@@ -14,7 +14,8 @@ async function checkLogin(username, password) {
         const data = await response.json();
 
         if (data.err_status) {
-            window.location.href = "./internal_error.html";
+            console.log(data.error);
+            // window.location.href = "./internal_error.html";
         } else {
             if (data.status === true) {
                return true;
@@ -23,7 +24,8 @@ async function checkLogin(username, password) {
             }
         }
     } catch (error) {
-        window.location.href = "./internal_error.html";
+        alert("Error: " + error);
+        // window.location.href = "./internal_error.html";
     }
 }
 

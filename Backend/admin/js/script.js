@@ -1,5 +1,6 @@
 function checkUserExistance(user)
 {
+    // IMPLEMETARE QUELLO CHE STA IN ADMIN
     return fetch('../../Backend/admin/php/check_user_existance.php',
         {
             method: 'POST',

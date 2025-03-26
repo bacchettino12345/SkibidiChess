@@ -72,6 +72,7 @@ require './check_login_admin.php';
                                 row.insertCell(3).textContent = user.active;
                                 row.insertCell(4).textContent = user.admin;
                                 row.insertCell(5).textContent = user.pts;
+                                row.insertCell(6).textContent = user.last_login;
                             });
                         }
                     }).catch(error => {
@@ -109,6 +110,7 @@ require './check_login_admin.php';
                         <td>isActive?</td>
                         <td>isAdmin?</td>
                         <td>PTS</td>
+                        <td>Last Login</td>
                     </tr>
                 </table>
             </div>
