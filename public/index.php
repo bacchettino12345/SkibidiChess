@@ -22,7 +22,6 @@
         </div>
         <small class="text-gray-400 mb-0.5 mt-10">SkibidiChess PREVIEW - SERVICE INFO: Mannaggia la madosca<small>
     </div>
-
         <script>
             function enableAdmin()
             {
