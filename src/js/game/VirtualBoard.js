@@ -17,6 +17,17 @@ const piecesClasses = {
     k: King
 }
 
+let eatenPieces = new Map();
+
+const pieceValue = {
+    p: 1,
+    n: 3,
+    b: 3,
+    r: 5,
+    q: 8,
+    k: 15
+}
+
 
 export class VirtualBoard{
 
@@ -93,6 +104,15 @@ export class VirtualBoard{
                 this.pieces[startSquare].firstMove = false;
 
 
+            if(this.pieces[targetSquare] !== null)
+            {
+                eatenPieces.set(this.pieces[targetSquare].type, (eatenPieces.get(this.pieces[targetSquare].type) || 0) + 1 ) 
+                this.updateEat()
+            }
+
+
+            console.log(eatenPieces)
+
             this.pieces[targetSquare] = this.pieces[startSquare];
             this.pieces[startSquare] = null;
             this.pieces[targetSquare].position = targetSquare;
@@ -105,9 +125,20 @@ export class VirtualBoard{
                     piece.calculateLegalMoves(this.pieces)
             }
 
-            this.rebuildFEN();
 
+            this.pieces.forEach(element => {
+                if (element !== null && (element.type === 'p' || element.type === 'P')) {
+                    const row = Helper.to2D(element.position)[0];
+                    if (row === 0 || row === 7) {
+                        
+                    }
+                }
+            });
+            
+            this.rebuildFEN();
             this.isWhiteTurn = !this.isWhiteTurn
+
+
 
             this.requestNextMove();
 
@@ -178,7 +209,7 @@ export class VirtualBoard{
         if(this.gameMode === "local" && !this.isWhiteTurn)
         {
                
-            callAPI(this.CurrentFEN + " b - - 0 1", 15).then(response =>{
+            callAPI(this.CurrentFEN + " b - - 0 1", 2).then(response =>{
                 let moves = response.split("")
 
                 console.log(moves)
@@ -196,5 +227,77 @@ export class VirtualBoard{
             })
         }
     }
-         
+       
+    isLowerCase(letter) {
+        return letter === letter.toLowerCase();
+    }
+
+    
+      
+    getTotalCapturedValue(color) {
+        let total = 0;
+
+        if(color == 'b')
+        {
+            eatenPieces.forEach((value, key) =>{
+                if(!this.isLowerCase(key))
+                    total += pieceValue[key.toLowerCase()] * value
+            })
+        }
+        else
+        {
+            eatenPieces.forEach((value, key) =>{
+                if(this.isLowerCase(key))
+                    total += pieceValue[key.toLowerCase()] * value
+            })
+        }
+
+
+        return total;
+    }
+
+
+    updateEat()
+    {
+        let whiteContainer = document.getElementById("w-captured-pieces")
+        whiteContainer.innerHTML = ''
+
+        let blackContainer = document.getElementById("b-captured-pieces")
+        blackContainer.innerHTML = ''
+
+        
+        let whiteCount = this.getTotalCapturedValue('w')
+        let blackCount = this.getTotalCapturedValue('b')
+        
+        let wMaterialCount = document.getElementById("w-Material-count")
+        let bMaterialCount = document.getElementById("b-Material-count")
+
+
+        if(whiteCount > blackCount)
+        {
+            bMaterialCount.style.visibility = 'hidden'
+            wMaterialCount.style.visibility = 'visible'
+            wMaterialCount.textContent = "+" + (whiteCount - blackCount)
+        }
+        else
+        {
+            wMaterialCount.style.visibility = 'hidden'
+            bMaterialCount.style.visibility = 'visible'
+            bMaterialCount.textContent = "+" + (blackCount - whiteCount)
+        }
+        
+
+
+        eatenPieces.forEach((value, key) => {
+
+            let color = this.isLowerCase(key) ? 'b' : 'w'
+
+            let img = document.createElement("img")
+            img.src = "../Assets/Images/CapturedPieces/" + key + value + color + ".png"
+            
+            this.isLowerCase(key) ? whiteContainer.appendChild(img) : blackContainer.appendChild(img)
+            
+
+        })
+    }
 }
