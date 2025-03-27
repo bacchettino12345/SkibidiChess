@@ -10,7 +10,7 @@
         src: url("../Assets/Fonts/JetBrainsMono-Regular.ttf");
     }
 
-    h1, h2, p, button, span, input{
+    h1, h2, p, button, span, input, :-ms-input-placeholder{
         font-family: jetBrains;
     }
 
