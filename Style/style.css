@@ -4,6 +4,16 @@
 
 @layer components{
 
+
+    @font-face {
+        font-family: jetBrains;
+        src: url("../Assets/Fonts/JetBrainsMono-Regular.ttf");
+    }
+
+    h1, h2, p, button{
+        font-family: jetBrains;
+    }
+
     .GreenBtn{
         border: none;
         outline: none;
@@ -117,14 +127,6 @@
         user-select: none;
     }
 
-    .pieces-icons{
-        background-image: url("../Assets/Images/captured-pieces.png");
-        background-repeat: no-repeat;
-        background-size: 25vw 25vw;
-
-        background-position: 1px -2.4vw;
-        display: inline-block;
-    }
 
 
 

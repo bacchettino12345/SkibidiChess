@@ -496,8 +496,15 @@ export class PhysicalBoard
             this.boardHeight = window.innerWidth - 160;
         }
 
-        this.boardElement.width = this.boardWidth;
-        this.boardElement.height = this.boardHeight;
+        const dpr = window.devicePixelRatio || 1;
+
+        this.boardElement.style.width = `${this.boardWidth}px`;
+        this.boardElement.style.height = `${this.boardHeight}px`;
+
+        this.boardElement.width = this.boardWidth * dpr;
+        this.boardElement.height = this.boardHeight * dpr;
+
+        this.ctx.scale(dpr, dpr);
         
         this.squareWidth = this.boardWidth / 8;
         this.squareHeight = this.boardHeight / 8;

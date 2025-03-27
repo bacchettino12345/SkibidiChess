@@ -24,29 +24,33 @@ export class Pawn extends Piece
 
         let forwardMove = [Coords[0] + this.direction, Coords[1]];
 
-
-        if(VirtualBoard[Helper.toLinear(forwardMove)] === null)
+        if(Coords[0] !== 0 && Coords[0] !== 7)
         {
-            this.legalMoves.push(Helper.toLinear(forwardMove))
-
-            if(this.firstMove)
+            if(VirtualBoard[Helper.toLinear(forwardMove)] === null)
             {
-                let doubleMove = [Coords[0] + 2 * this.direction, Coords[1]];
-                if(VirtualBoard[Helper.toLinear(doubleMove)] === null)
-                    this.legalMoves.push(Helper.toLinear(doubleMove))
+                this.legalMoves.push(Helper.toLinear(forwardMove))
+    
+                if(this.firstMove)
+                {
+                    let doubleMove = [Coords[0] + 2 * this.direction, Coords[1]];
+                    if(VirtualBoard[Helper.toLinear(doubleMove)] === null)
+                        this.legalMoves.push(Helper.toLinear(doubleMove))
+                }
             }
+    
+            //Capture Logic
+            let captureLeft = [Coords[0] + this.direction , Coords[1] - 1];
+    
+            if(this.isValidCapture(captureLeft, VirtualBoard))
+                this.legalMoves.push(Helper.toLinear(captureLeft));
+    
+            let captureRight = [Coords[0] + this.direction, Coords[1] + 1];
+    
+            if(this.isValidCapture(captureRight, VirtualBoard))
+                this.legalMoves.push(Helper.toLinear(captureRight));
+
         }
 
-        //Capture Logic
-        let captureLeft = [Coords[0] + this.direction , Coords[1] - 1];
-
-        if(this.isValidCapture(captureLeft, VirtualBoard))
-            this.legalMoves.push(Helper.toLinear(captureLeft));
-
-        let captureRight = [Coords[0] + this.direction, Coords[1] + 1];
-
-        if(this.isValidCapture(captureRight, VirtualBoard))
-            this.legalMoves.push(Helper.toLinear(captureRight));
 
     }
 

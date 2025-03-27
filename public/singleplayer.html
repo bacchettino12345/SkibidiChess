@@ -13,6 +13,9 @@
 <body class=" bg-[#302E2B] flex flex-col justify-center items-center" mode="local" >
     
     <div id="Container" class="flex flex-col items-center  justify-center lg:flex-row lg:h-screen mt-5 lg:mt-0" >
+
+
+      <div class="flex flex-col items-center justify-center lg:flex-row">
         <!-- Chess Panel -->
         <div id="ChessPanel" class="w-fit">
               <!-- Chess content -->
@@ -20,41 +23,52 @@
 
                 <img src="../Assets/Images/ImgPlaceholder.jpg" id="PlayerImg" class="w-[4vh] h-[4vh] rounded-[0.2vw]">
 
-                <div id="nameInfo" class="ml-[0.5vw]">
+                <div id="nameInfo" class="ml-[0.5vw] ">
                     <h2 id="PlayerName" class="text-neutral-50 font-bold text-[2vh] h-[2.5vh]">Player Name</h2>
 
-                    <div class="flex flex-row text-[1.5vh]">
+                    <div class="flex flex-row text-[1.5vh] w-full h-[2.5vh]">
 
-                      <div class="b-captured-pieces">
-                        <span>ciao</span>
-                      </div>
 
-                      <h2 id="b-Material-count" >+0</h2>
+                      <div class="w-full flex flex-row " id="b-captured-pieces"></div>
+  
+                      <h2 id="b-Material-count" class="text-white invisible">+0</h2>
                     </div>
                 </div>
             </div>
 
             <canvas id="ChessBoard" class="rounded-[0.3vw]"></canvas>
 
-            <div id="PlayerInfo" class="flex flex-row items-center mt-[0.3vh] h-[5vh] bg-amber-300">
+            <div id="PlayerInfo" class="flex flex-row items-center mt-[0.3vh] h-[4.5vh]">
 
-                <img src="../Assets/Images/ImgPlaceholder.jpg" id="PlayerImg" class="w-[4vh] h-[4vh] rounded-[0.2vw]">
+                <img src="../Assets/Images/ImgPlaceholder.jpg" id="PlayerImg" class="h-full rounded-[0.2vw]">
 
-                <div id="nameInfo" class="ml-[0.5vw]">
+                <div id="nameInfo" class="ml-[0.5vw] flex flex-col gap-y-0.5">
+
                   <h2 id="PlayerName" class="text-neutral-50 font-bold text-[2vh] h-[2.5vh]">Player Name</h2>
 
-                  <div class="flex flex-row text-[1.5vh] w-full bg-red-300">
+                  <div class="flex flex-row text-[1.5vh] w-full h-[2.5vh]">
 
-                    <div class="w-captured-pieces w-full bg-blue-400">
-                      <span class="pieces-icons  w-[100px] bg-green-300"> </span>
-                    </div>
 
-                    <h2 id="w-Material-count" >+0</h2>
+                    <div class="w-full flex flex-row " id="w-captured-pieces"></div>
+
+                    <h2 id="w-Material-count" class="text-white invisible">+0</h2>
                   </div>
+
               </div>
             </div>
 
         </div>
+
+        <div id="Promote" class="flex flex-row lg:flex-col lg:ml-5 border-[#000000] border-2 mt-5 bg-[#7b7b7b45]">
+          <button><img src="../Assets/Images/p1.svg" class="hover:drop-shadow-2xl w-[3rem] h-[3rem]"></button>
+          <button><img src="../Assets/Images/n1.svg" class="hover:drop-shadow-2xl w-[3rem] h-[3rem]"></button>
+          <button><img src="../Assets/Images/b1.svg" class="hover:drop-shadow-2xl w-[3rem] h-[3rem]"></button>
+          <button><img src="../Assets/Images/r1.svg" class="hover:drop-shadow-2xl w-[3rem] h-[3rem]"></button>
+          <button><img src="../Assets/Images/q1.svg" class="hover:drop-shadow-2xl w-[3rem] h-[3rem]"></button>
+          
+
+        </div>
+      </div>
         
 
         <!-- GameInfo Panel -->
