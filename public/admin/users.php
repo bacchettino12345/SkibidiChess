@@ -57,22 +57,25 @@ require './check_login_admin.php';
 
             function showUsers() {
                 if (document.querySelector('#getUserSearchUsername').value !== "") {
-                    getUsers(document.querySelector('#getUserSearchUsername').value).then(users => {
+                    getUsers(document.querySelector('#getUserSearchUsername').value.trim()).then(users => {
                         if (!users) return;
                         const usersTable = document.querySelector("#usersTable");
                         clearUsers();
                         if (users.length === 0) {
                             alert("No users found.");
                         } else {
+                            console.log(users.length);
                             users.forEach(user => {
                                 const row = usersTable.insertRow();
                                 row.insertCell(0).textContent = user.id;
                                 row.insertCell(1).textContent = user.user;
-                                row.insertCell(2).textContent = user.mail;
-                                row.insertCell(3).textContent = user.active;
-                                row.insertCell(4).textContent = user.admin;
-                                row.insertCell(5).textContent = user.pts;
-                                row.insertCell(6).textContent = user.last_login;
+                                row.insertCell(2).textContent = user.firstname;
+                                row.insertCell(3).textContent = user.lastname;
+                                row.insertCell(4).textContent = user.mail;
+                                row.insertCell(5).textContent = user.active;
+                                row.insertCell(6).textContent = user.admin;
+                                row.insertCell(7).textContent = user.pts;
+                                row.insertCell(8).textContent = user.last_login;
                             });
                         }
                     }).catch(error => {
@@ -95,9 +98,9 @@ require './check_login_admin.php';
         <div id="users" class="text-white w-full mx-auto mt-[2vh]">
             <p class="text-white text-3xl">Users</p>
             <div class="mt-[2vh] p-[20px] bg-[#1c1a19] rounded-[10px] w-full flex items-center gap-2">
-                <label class="text-white">Enter User:</label>
+                <label class="text-white">Search:</label>
                 <input class="bg-[#22201e] px-2 py-1 outline-none text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#739552] border-[#1c1a19]" 
-                    placeholder="Username" id="getUserSearchUsername" type="text">
+                    placeholder="Search" id="getUserSearchUsername" type="text">
                 <button id="getUserSearchBtn" class="GreenBtn py-1 mb-[0.625vh]" onclick="showUsers()">Search</button>
                 <button id="clearResultsBtn" class="RedBtn py-1 mb-[0.625vh]" onclick="clearUsers()">Clear Results</button>
             </div>
@@ -106,6 +109,8 @@ require './check_login_admin.php';
                     <tr>
                         <td>ID</td>
                         <td>User</td>
+                        <td>Firstname</td>
+                        <td>Lastname</td>
                         <td>Email</td>
                         <td>isActive?</td>
                         <td>isAdmin?</td>
