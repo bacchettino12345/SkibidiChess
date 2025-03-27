@@ -10,7 +10,7 @@
         src: url("../Assets/Fonts/JetBrainsMono-Regular.ttf");
     }
 
-    h1, h2, p, button{
+    h1, h2, p, button, span, input{
         font-family: jetBrains;
     }
 
