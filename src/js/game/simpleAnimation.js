@@ -1,11 +1,12 @@
 export class SimpleAnimation 
 {
 
-    constructor(    { duration, onUpdate, onComplete, easing, onStop }  ) 
+    constructor(    { duration, onStart, onUpdate, onComplete, easing, onStop }  ) 
     {
         this.startTime = performance.now();
         this.duration = duration;
 
+        this.onStart = onStart;
         this.onUpdate = onUpdate;
         this.onComplete = onComplete;
         this.onStop = onStop;
@@ -14,8 +15,10 @@ export class SimpleAnimation
 
         this.isFinished = false;
         this.isStopped = false;
-    }
 
+        this.onStart()
+    }
+    
     update(timeStamp) 
     {
         if (this.isStopped || this.isFinished) return;

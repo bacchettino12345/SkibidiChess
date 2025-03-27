@@ -101,8 +101,6 @@ export class PhysicalBoard
 
                 this.startPieceMoveAnimation(this.virtualBoard.pieces[this.selectedSquare], startCoords[1], startCoords[0], endCoords[1], endCoords[0], 100 );
 
-
-                this.HighlightedSquares.push(clickedSquare);
                 this.selectedSquare = null;
             }
             else if(this.virtualBoard.getPieceAt(clickedSquare) !== null && this.isPlayerMove(clickedSquare))
@@ -377,6 +375,18 @@ export class PhysicalBoard
         const anim = new SimpleAnimation({
             duration, 
 
+            onStart: () => {
+
+                let posIndex = Helper.toLinear([endY, endX])
+                
+                this.HighlightedSquares = [];
+                this.HighlightedSquares.push(piece.position);
+                this.HighlightedSquares.push(posIndex);
+
+                console.log("moving")
+                console.log(this.HighlightedSquares)
+            },
+
             onUpdate: (progress) => {
 
                 piece.isMoving = true;
@@ -388,7 +398,6 @@ export class PhysicalBoard
                 
                 this.RenderBoard();
 
-
                 this.isFlipped ? this.drawPieceAtCoords(piece,  currentX, currentY) : this.drawPieceAtCoords(piece, 7-  currentX, 7-  currentY) 
                     
             },
@@ -398,10 +407,16 @@ export class PhysicalBoard
                 piece.isMoving = false;
 
                 anim.isPlaying = false;
+
+
                 let posIndex = Helper.toLinear([endY, endX])
+
                 this.virtualBoard.movePiece(piece.position, posIndex);
                 this.animatingCircles.delete(piece.position)
                 this.renderSuggestion = false;
+
+                
+
                 this.RenderBoard();
             },
 
@@ -428,6 +443,10 @@ export class PhysicalBoard
         const anim = new SimpleAnimation
         ({
             duration,
+
+            onStart: () => {
+
+            },
 
             onUpdate: (progress) => {
 

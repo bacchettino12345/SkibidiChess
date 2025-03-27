@@ -19,6 +19,12 @@ function resizeCanvas() {
     physicalBoard.resizeBoard();
 }
 
+window.promote = function(type) {
+    virtualBoard.promotion(type)
+
+    physicalBoard.RenderBoard()
+}
+
 
 window.Reverseboard = function () {
     physicalBoard.isFlipped = !physicalBoard.isFlipped;

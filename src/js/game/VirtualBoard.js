@@ -40,6 +40,9 @@ export class VirtualBoard{
 
     physicalBoard = null
 
+
+    promote = null
+
     constructor()
     {
         this.pieces = new Array(64).fill(null);
@@ -111,8 +114,6 @@ export class VirtualBoard{
             }
 
 
-            console.log(eatenPieces)
-
             this.pieces[targetSquare] = this.pieces[startSquare];
             this.pieces[startSquare] = null;
             this.pieces[targetSquare].position = targetSquare;
@@ -130,7 +131,7 @@ export class VirtualBoard{
                 if (element !== null && (element.type === 'p' || element.type === 'P')) {
                     const row = Helper.to2D(element.position)[0];
                     if (row === 0 || row === 7) {
-                        
+                        this.promote = element.position
                     }
                 }
             });
@@ -139,13 +140,36 @@ export class VirtualBoard{
             this.isWhiteTurn = !this.isWhiteTurn
 
 
-
-            this.requestNextMove();
+            if(this.promote === null)
+                this.requestNextMove();
+            else
+            {
+                let promotePanel = document.getElementById("Promote")
+                promotePanel.style.visibility = 'visible'
+            }
 
             return true;
         }
             
         return false;
+    }
+
+    promotion(type)
+    {
+        
+
+
+        const pieceClass = piecesClasses[type];
+
+        if(pieceClass)
+            this.pieces[this.promote]  = new pieceClass(this.pieces[this.promote].isWhite, this.promote);  
+
+        
+        let promotePanel = document.getElementById("Promote")
+        console.log(this.pieces)
+        promotePanel.style.visibility = 'hidden'
+        this.promote = null
+        this.requestNextMove()
     }
 
     rebuildFEN()
@@ -212,8 +236,6 @@ export class VirtualBoard{
             callAPI(this.CurrentFEN + " b - - 0 1", 2).then(response =>{
                 let moves = response.split("")
 
-                console.log(moves)
-
                 let fileFrom = moves[0].charCodeAt(0) - 97
                 let fileTo = moves[2].charCodeAt(0) - 97
 
@@ -279,7 +301,7 @@ export class VirtualBoard{
             wMaterialCount.style.visibility = 'visible'
             wMaterialCount.textContent = "+" + (whiteCount - blackCount)
         }
-        else
+        else if(blackCount > whiteCount)
         {
             wMaterialCount.style.visibility = 'hidden'
             bMaterialCount.style.visibility = 'visible'
