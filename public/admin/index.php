@@ -15,7 +15,7 @@
         <div class="flex justify-center items-center gap-4 mb-5.5">
             <img src="../../Assets/Images/Logo.png" alt="logo" class="w-[25%]">
             <hr class="bg-white h-[50px] w-[2px]">
-            <p class="text-white text-4xl"><i>Administration Panel</i></p>
+            <p class="text-white text-3xl"><i>Administration Panel</i></p>
                     
         </div>
     

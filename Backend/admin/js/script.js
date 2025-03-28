@@ -54,6 +54,7 @@ function deleteUser(user)
 }
 
 function getUsers(user) {
+    // IMPLEMENTARE AWAIT ASYNC
     return fetch('../../Backend/admin/php/retrive_users.php', 
         {
             method: 'POST',
@@ -74,35 +75,82 @@ function getUsers(user) {
         });
 }
 
-function setPoints(user, pts)
+async function getLastGlobalLogins()
 {
-    fetch('../../Backend/admin/php/set_points.php',
+    try
+    {
+
+        const response = await fetch('../../Backend/admin/php/retrive_last_logins.php', 
         {
-            method: 'POST', 
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }, 
-            body: JSON.stringify({username: user, points: pts})
-        }
-    )
-    .then(response => response.json())
-    .then(data =>
-    {
-        console.log(data.success);
-        if(data.success)
-        {
-            alert(">> Operation - Set Points - Success");
-        } else
-        {
-            alert(">> Error during operation - Set Points - >>" + data.error);
-        }
+            }
+        });
+        if(!response.ok)
+            window.location.href = "./internal_error.html";
+    
+        const data = await response.json();
+    
+        return data.logins;
     }
-    )
-    .catch(error =>
+    catch(error)
+    {
+        window.location.href = "./internal_error.html";
+    }
+
+}
+
+async function getLastUserLogins(user)
+{
+    try
+    {
+
+        const response = await fetch('../../Backend/admin/php/retrive_access_logs.php', 
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({username: user})
+        });
+        if(!response.ok)
+            window.location.href = "./internal_error.html";
+    
+        const data = await response.json();
+    
+        return data.logins;
+    }
+    catch(error)
+    {
+        window.location.href = "./internal_error.html";
+    }
+
+}
+
+function setPoints(user, pts)
+{
+    try
+    {
+        const response =  fetch('../../Backend/admin/php/set_points.php',
+            {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'
+                }, 
+                body: JSON.stringify({username: user, points: pts})
+            }
+        );
+        if(!response.ok)
+            alert(">> Error during operation - Set Points - >>" + data.error);
+        else
+            alert(">> Operation - Set Points - Success");
+
+    } catch(error)
     {
         console.log("Error: ", error);
+        window.location.href = "./internal_error.html";
     }
-    );
 }
 
 function manageAdmin(user, priv)

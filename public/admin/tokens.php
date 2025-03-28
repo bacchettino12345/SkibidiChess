@@ -13,7 +13,7 @@
     <div class="flex justify-center items-center mt-[2vh] gap-4">
         <img src="../../Assets/Images/Logo.png" alt="logo" class="w-[225px]">
         <hr class="bg-white h-[50px] w-[2px]">
-        <p class="text-white text-3xl"><i>Administration Panel</i></p>        
+        <p class="text-white text-2xl"><i>Administration Panel</i></p>        
     </div>
     <a href="./" class="text-white"><i><< Back to Index</i></a>
     <div id="active_tokens" class="text-white  mx-auto mt-[2vh] mb-5">
