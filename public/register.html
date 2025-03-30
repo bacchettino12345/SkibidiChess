@@ -11,20 +11,44 @@
 </head>
 <body class="bg-[#302E2B]">
     <script> 
-        async function validateInput() {
-            const regex = /^[a-zA-Z0-9_]{3,24}$/;
-            if(document.getElementById('password').value == "" || document.getElementById('username').value == "" || document.getElementById('firstname').value == "" || document.getElementById('lastname').value == "" || document.getElementById('email').value == ""  || regex.test(document.getElementById('username').value) == false){
-                document.querySelector('#nvc').style.display = "block";
-                document.querySelector('#exu').style.display = "none";
-            }
-            else 
-            {
-                await handleRegister(document.getElementById('firstname').value, document.getElementById('lastname').value, document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value);
-            }
+        
+        function registerHandler() {
+            const firstname = document.getElementById("firstname").value;
+            const lastname = document.getElementById("lastname").value;
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            fetch('../Backend/User.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'createUser',
+                    firstname: firstname,
+                    lastname: lastname,
+                    username: username,
+                    email: email,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = './index.php';
+                } else {
+                    const errorBanner = document.getElementById("error");
+                    errorBanner.style.display = "block";
+                    const message = document.getElementById("message");
+                    message.textContent = data.message;
+                }
+            });
         }
+        
     </script>
     <img src="../Assets/Images/Logo.png" class="w-[25%] mb-[5vh] text-center mx-auto mt-15">
-    <form id="auth" class="w-[450px] mx-auto mt-[5px] p-[20px] pb-[25px] bg-[#1c1a19] rounded-[10px]" onsubmit="event.preventDefault(); validateInput();">
+    <form id="auth" class="w-[450px] mx-auto mt-[5px] p-[20px] pb-[25px] bg-[#1c1a19] rounded-[10px]" onsubmit="event.preventDefault(); registerHandler();">
         <div class="flex space-x-4">
             <div class="w-1/2">
                 <p class="text-neutral-50 pb-1 pl-0.5">Name</p>
@@ -78,22 +102,15 @@
         pwd.type = pwd.type === 'password' ? 'text' : 'password';
         }
     </script>
-        <div role="alertNotValid" class="mt-1 mb-1" style="display: none;" id="nvc">
+        <div role="alert" class="mt-1 mb-1" style="display: none;" id="error">
             <div class="bg-orange-500 text-white font-bold rounded-t px-4 py-2">
                 Warning
             </div>
             <div class="border border-t-0 border-orange-400 rounded-b bg-red-100 px-4 py-3 text-orange-700">
-                <p>Credentials not valid</p>
+                <p></p>
             </div>
         </div>
-        <div role="alertExistingUsername" class="mt-1 mb-1" style="display: none;" id="exu">
-            <div class="bg-orange-500 text-white font-bold rounded-t px-4 py-2">
-                Warning
-            </div>
-            <div class="border border-t-0 border-orange-400 rounded-b bg-red-100 px-4 py-3 text-orange-700">
-                <p>This username is already registered.</p>
-            </div>
-        </div>
+        
         <button id="Button" type="submit" class="mt-1.5 GreenBtn w-[100%] h-[50px] text-[1vw]">Register an account</button>
     </form>
     <p class="text-gray-400 text-center mt-2 mb-10">Already have an account? <u><a href="./login.html">Click here to log in.</a></u></p>

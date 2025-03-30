@@ -1,5 +1,5 @@
 <?php
-
+/*
     function getClientIP() {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -69,5 +69,5 @@
     {
         echo json_encode(['err_status' => true, 'error' => $e]);
     }
-
+*/
 ?>

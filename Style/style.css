@@ -29,11 +29,14 @@
         filter: drop-shadow(0px 55px 35px rgba(0,0,0,0.25));
     }
 
+
+    
+    
     .GreenBtn:active{
         box-shadow: 0px 0px 0px 0px #739552;
         background-color: #b9d49e;
     }
-
+    
     .GreenBtn:hover{
         transform: translateY(2px);
         box-shadow: 0px 5px 0px 0px #739552;
@@ -41,8 +44,34 @@
         filter: drop-shadow(0px 30px 35px rgba(0,0,0,0.25));
         transition: all 0.1s;
     }
+    
+    
+    .DisabledBtn{
+        border: none;
+        outline: none;
+        background-color: #696969;
+        padding: 10px 20px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+        border-radius: 5px;
+        transition: all ease 0.1s;
+        box-shadow: 0px 7px 0px 0px #797979;
+        filter: drop-shadow(0px 55px 35px rgba(0,0,0,0.25));
+    }
 
+    .DisabledBtn:active{
+        box-shadow: 0px 0px 0px 0px #858585;
+        background-color: #797979;
+    }
 
+    .DisabledBtn:hover{
+        transform: translateY(2px);
+        box-shadow: 0px 5px 0px 0px #5e5e5e;
+        cursor: pointer;
+        filter: drop-shadow(0px 30px 35px rgba(0,0,0,0.25));
+        transition: all 0.1s;
+    }
 
 
     .RedBtn{
