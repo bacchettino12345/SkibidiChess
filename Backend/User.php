@@ -2,6 +2,10 @@
 require 'Database.php';
 require 'EmailSender.php'; 
 
+require_once '../vendor/autoload.php';
+use DeviceDetector\DeviceDetector;
+use DeviceDetector\Parser\Device\DeviceParserAbstract;
+
 class User
 {
     private $conn;
@@ -25,17 +29,8 @@ class User
     }
 
 
-    public function createUser($firstname, $lastname, $username, $email, $password)
+    public function registrationInputValidator($username, $firstname, $lastname, $email, $password)
     {
-        if(session_status() == PHP_SESSION_NONE)
-        {
-            session_start();
-        }
-        session_destroy();
-        $_SESSION = [];
-
-        $password = password_hash($password, PASSWORD_BCRYPT);
-
         if (empty($username) || empty($firstname) || empty($lastname) || empty($email) || empty($password)) {
             echo json_encode(['success' => false, 'message' => 'All fields are required.']);
             exit();
@@ -52,30 +47,115 @@ class User
             echo json_encode(['success' => false, 'message' => 'Username already taken.']);
             exit();
         }
-
-
-        try
-        {
-            $sql = "INSERT INTO accounts (username, firstname, lastname, email, password) VALUES (:username, :firstname, :lastname, :email, :password)";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':username', $username);
-            $stmt->bindParam(':firstname', $firstname);
-            $stmt->bindParam(':lastname', $lastname);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $password);
-            $stmt->execute(); 
-
-            echo json_encode(['success' => true]);
-        } catch (Exception $e)
-        {
-            echo json_encode(['success' => false, 'message' => 'Error creating user: ' . $e->getMessage()]); 
-        }
     }
 
 
 
-    private function getClientIP() {
-        // TRANSFORMA IN GET DEVICE INFO 
+    public function createEmailVerifyCode($firstname, $lastname, $username, $email, $password)
+    {
+        $this->registrationInputValidator($username, $firstname, $lastname, $email, $password);
+
+        try
+        {
+            // TOGLIERE COUNT E PREDERE IL CODICE E SPEDIRLO PER EMAIL
+            $sql = "SELECT COUNT(*) FROM verification_codes WHERE email = :email";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            if($stmt->fetchColumn() > 0)
+            {
+                echo json_encode(['success' => true]);
+            }
+            else
+            {
+
+                $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+                $sql = "INSERT INTO verification_codes (code, email) VALUES (:code, :email)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':code', $code);
+                $stmt->execute();
+                /// SPEDIRE CODICE PER EMAIL
+                echo json_encode(['success' => true]);
+            }
+
+        } catch (Exception $e)
+        {
+            echo json_encode(['success' => false, 'error' => 'Internal Database erorr: ' . $e->getMessage()]);
+        }
+    }
+
+
+    private function verifyEmailVerifyCode($email, $code)
+    {
+        try
+        {
+            $sql = "SELECT COUNT(*) FROM verification_codes WHERE email = :email AND code = :code";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':code', $code);
+            $stmt->execute();
+            if($stmt->fetchColumn() > 0)
+                return true;
+            else
+                return false;
+        } catch (Exception $e)
+        {
+            echo json_encode(['success' => false, 'message' => 'Errore durante la verifica del codice: ' . $e->getMessage()]);
+            exit();
+        }
+    }
+
+
+    public function createUser($firstname, $lastname, $username, $email, $password, $code)
+    {
+        if(session_status() == PHP_SESSION_NONE)
+        {
+            session_start();
+        }
+        session_destroy();
+        $_SESSION = [];
+
+        $password = password_hash($password, PASSWORD_BCRYPT);
+    
+        $this->registrationInputValidator($username, $firstname, $lastname, $email, $password);
+
+        if($this->verifyEmailVerifyCode($email, $code))
+        {
+            try
+            {
+                $sql = "INSERT INTO accounts (username, firstname, lastname, email, password) VALUES (:username, :firstname, :lastname, :email, :password)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bindParam(':username', $username);
+                $stmt->bindParam(':firstname', $firstname);
+                $stmt->bindParam(':lastname', $lastname);
+                $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':password', $password);
+                $stmt->execute(); 
+    
+                echo json_encode(['success' => true]);
+            } catch (Exception $e)
+            {
+                echo json_encode(['success' => false, 'message' => 'Error creating user: ' . $e->getMessage()]); 
+            }
+        }
+        else
+        {
+            echo json_encode(['success' => false, 'message' => 'Wrong verification code.']); 
+        }
+
+    }
+
+
+
+    private function getAccessInfo() {
+        
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        $dd = new DeviceDetector($userAgent);
+        $dd->parse();
+
+        $time = date('Y-m-d H:i:s');
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             $ip = $_SERVER['HTTP_CLIENT_IP'];
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -83,24 +163,73 @@ class User
         } else {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
-        return $ip;
+        
+
+
+        $brandName = $dd->getBrandName();
+        $model = $dd->getModel();
+
+        $device = 'N/A';
+        if (!empty($brandName) || !empty($model)) {
+            $device = trim(($brandName ?? '') . ' ' . ($model ?? ''));
+        }
+
+        $osName = $dd->getOs('name');
+        $osVersion = $dd->getOs('version');
+
+        $os = 'N/A';
+        if (!empty($osName) || !empty($osVersion)) {
+            $os = trim(($osName ?? '') . ' ' . ($osVersion ?? ''));
+        }
+
+        $clientName = $dd->getClient('name');
+        $clientVersion = $dd->getClient('version');
+
+        $client = 'N/A';
+        if (!empty($clientName) || !empty($clientVersion)) {
+            $client = trim(($clientName ?? '') . ' ' . ($clientVersion ?? ''));
+        }
+
+
+
+        $details = json_decode(file_get_contents("http://ip-api.com/json/{$ip}"));
+        if ($details && $details->status === 'success')
+            $info = ["ip" => $ip, "device" => $device, "os" => $os, "client" => $client, "country" => $details->country, "region" => $details->regionName, "city" => $details->city, "isp" => $details->isp, "as" => $details->as, "time" => $time];
+        else
+            $info = ["ip" => $ip, "device" => $device, "os" => $os, "client" => $client, "country" => "N/A", "region" => "N/A", "city" => "N/A", "isp" => "N/A", "as" => "N/A", "time" => $time];
+
+        return $info;
+
     }
 
-    private function registerLogin($id)
+    private function registerLogin($id, $info)
     {
-        // AGGIUNGI LOGIN AL REGISTRO
-        $ip = $this->getClientIP();
-        $time = date('Y-m-d H:i:s');
-        $sql = "INSERT INTO access_logs (user_id, ip, time) VALUES (:id, :ip, :time)";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':ip', $ip);
-        $stmt->bindParam(':time', $time);
-        $stmt->execute();
+        try
+        {
+            $sql = "INSERT INTO access_logs (user_id, ip, device, os, client, country, region, city, isp, as_, time) VALUES (:id, :ip, :device, :os, :client, :country,:region, :city, :isp, :as, :time)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':ip', $info['ip']);
+            $stmt->bindParam(':device', $info['device']);
+            $stmt->bindParam(':os', $info['os']);
+            $stmt->bindParam(':client', $info['client']);
+            $stmt->bindParam(':country', $info['country']);
+            $stmt->bindParam(':region', $info['region']);
+            $stmt->bindParam(':city', $info['city']);
+            $stmt->bindParam(':isp', $info['isp']);
+            $stmt->bindParam(':as', $info['as']);
+            $stmt->bindParam(':time', $info['time']);
+            $stmt->execute();
+        } catch (Exception $e)
+        {
+            echo json_encode(['success' => false, 'message' => 'Error writing logs on the Database: ' . $e->getMessage()]);
+        }
     }
     
     public function loginUser($username, $password)
     {
+
+        
         if(session_status() == PHP_SESSION_NONE)
         {
             session_start();
@@ -113,6 +242,9 @@ class User
         $_SESSION = [];
         session_start();
         */
+
+
+        $info = $this->getAccessInfo();
 
         if (empty($username) || empty($password)) {
             echo json_encode(['success' => false, 'message' => 'All fields are required.']);
@@ -135,9 +267,9 @@ class User
                     'email' => $user['email']
                 ];
                 
-                $this->emailSender->sendTestMail($user['email']);
+                $this->emailSender->sendLoginMail($user['email'], $info);
 
-                $this->registerLogin($user['id']);
+                $this->registerLogin($user['id'], $info);
 
                 echo json_encode(['success' => true]);
             } else {
@@ -187,7 +319,7 @@ if ($data) {
     $action = $data['action'];
     switch ($action) {
         case 'createUser':
-            $user->createUser($data['firstname'], $data['lastname'], $data['username'], $data['email'], $data['password']);
+            $user->createUser($data['firstname'], $data['lastname'], $data['username'], $data['email'], $data['password'], $data['code']);
             break;
         case 'loginUser':
             $user->loginUser($data['username'], $data['password']);
@@ -197,6 +329,9 @@ if ($data) {
             break;
         case 'checkIfAdmin':
             $user->checkIfAdmin($data['username']);
+            break;
+        case 'createEmailVerifyCode':
+            $user->createEmailVerifyCode($data['firstname'], $data['lastname'], $data['username'], $data['email'], $data['password']);
             break;
         default:
             echo json_encode(['success' => false, 'message' => 'Invalid action.']);
