@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 28, 2025 at 10:11 PM
+-- Generation Time: Mar 30, 2025 at 03:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,7 +38,28 @@ CREATE TABLE `access_logs` (
 --
 
 INSERT INTO `access_logs` (`user_id`, `ip`, `time`) VALUES
-(6, '127.0.0.1', '2025-03-28 22:09:12');
+(6, '127.0.0.1', '2025-03-28 22:09:12'),
+(6, '127.0.0.1', '2025-03-29 12:35:00'),
+(3, '127.0.0.1', '2025-03-29 12:38:24'),
+(63, '10.10.201.221', '2025-03-29 12:39:14'),
+(62, '10.10.201.38', '2025-03-29 12:39:28'),
+(64, '127.0.0.1', '2025-03-30 15:02:34'),
+(64, '127.0.0.1', '2025-03-30 15:06:38'),
+(64, '127.0.0.1', '2025-03-30 15:07:22'),
+(64, '127.0.0.1', '2025-03-30 15:08:01'),
+(64, '127.0.0.1', '2025-03-30 15:09:32'),
+(64, '127.0.0.1', '2025-03-30 15:10:30'),
+(64, '127.0.0.1', '2025-03-30 15:10:56'),
+(64, '127.0.0.1', '2025-03-30 15:23:14'),
+(64, '127.0.0.1', '2025-03-30 15:23:30'),
+(64, '127.0.0.1', '2025-03-30 15:44:37'),
+(64, '127.0.0.1', '2025-03-30 15:46:59'),
+(64, '127.0.0.1', '2025-03-30 15:47:44'),
+(64, '127.0.0.1', '2025-03-30 15:48:16'),
+(64, '127.0.0.1', '2025-03-30 15:48:37'),
+(64, '127.0.0.1', '2025-03-30 15:48:58'),
+(64, '127.0.0.1', '2025-03-30 15:49:41'),
+(64, '127.0.0.1', '2025-03-30 15:50:04');
 
 -- --------------------------------------------------------
 
@@ -48,11 +69,11 @@ INSERT INTO `access_logs` (`user_id`, `ip`, `time`) VALUES
 
 CREATE TABLE `accounts` (
   `id` int(8) NOT NULL,
-  `user` varchar(24) NOT NULL,
+  `username` varchar(24) NOT NULL,
   `firstname` varchar(25) NOT NULL,
   `lastname` varchar(25) NOT NULL,
-  `mail` varchar(255) NOT NULL,
-  `psswd` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1,
   `admin` tinyint(1) NOT NULL DEFAULT 0,
   `pts` int(15) NOT NULL DEFAULT 0,
@@ -63,12 +84,8 @@ CREATE TABLE `accounts` (
 -- Dumping data for table `accounts`
 --
 
-INSERT INTO `accounts` (`id`, `user`, `firstname`, `lastname`, `mail`, `psswd`, `active`, `admin`, `pts`, `pfp_path`) VALUES
-(3, 'cinaconlaccentosullaa', '', '', 'admin@skibidichess.com', '4d553f905091a759234f54c8491cb64346dbf309b6798c7e5faa094a00a5325e', 1, 1, 30, ''),
-(6, 'sbacs', 'Nigger', '', 'admin@skibidichess.com', '4d553f905091a759234f54c8491cb64346dbf309b6798c7e5faa094a00a5325e', 1, 1, 250, ''),
-(58, 'nigger69', 'ciao', 'nigger 69', 'nigger@nigger.nigger', '120f6e5b4ea32f65bda68452fcfaaef06b0136e1d0e4a6f60bc3771fa0936dd6', 1, 0, 0, ''),
-(60, 'Faggot', 'tommaso', 'luciani', 'ciao@ciao.com', 'b133a0c0e9bee3be20163d2ad31d6248db292aa6dcb1ee087a2aa50e0fc75ae2', 1, 0, 250, ''),
-(61, 'CatInABox', 'Puss', 'Cat', 'CatInABox@riccardociaglia.it', '87d042492ed5d7159ca33186108d046699656b549ebfac091dd6c9eaeacc63dd', 1, 0, 0, '');
+INSERT INTO `accounts` (`id`, `username`, `firstname`, `lastname`, `email`, `password`, `active`, `admin`, `pts`, `pfp_path`) VALUES
+(64, 'test', 'Account', 'TEST', 'daddyalberty@gmail.com', '$2y$10$AJeA6j96dOIHY6ZFPaqzweEf6LoWoPjDzrNZO/XMpnHgCGvc/YWn2', 1, 0, 0, '');
 
 -- --------------------------------------------------------
 
@@ -134,7 +151,7 @@ ALTER TABLE `active_games`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
