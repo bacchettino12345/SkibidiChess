@@ -24,6 +24,7 @@ class EmailSender {
 
             $mail->isHTML(true);
             $mail->Subject = 'Security Alert';
+            // OTTIMIZZA PER MAIL L'HTML
             $mail->Body    = '
                 <!DOCTYPE html>
 <html lang="it">
