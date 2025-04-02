@@ -1,5 +1,11 @@
 <?php
-    require './check_login.php';
+    use Skibidi\SessionChecker;
+    require_once '../Backend/SessionChecker.php';
+    $sessionChecker = new SessionChecker();
+
+    if(!$sessionChecker->checkSession())
+        header('Location: login.html');
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

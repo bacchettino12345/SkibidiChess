@@ -1,6 +1,9 @@
 <?php
-require 'Database.php';
-require 'EmailSender.php'; 
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/EmailSender.php';
+require_once __DIR__ . '/SessionChecker.php';
+
+use Skibidi\Database\Database;
 
 require_once '../vendor/autoload.php';
 use DeviceDetector\DeviceDetector;
@@ -8,14 +11,13 @@ use DeviceDetector\DeviceDetector;
 class User
 {
     private $conn;
-    private $emailSender;
+    private $email;
 
     public function __construct()
     {
         $Database = new Database();
         $this->conn = $Database->getConnection();
-        $EmailSender = new EmailSender();
-        $this->emailSender = $EmailSender;
+        $this->email = new EmailSender();
     }
 
     private function isUsernameTaken($username)
@@ -81,7 +83,7 @@ class User
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if($result)
             {
-                $this->emailSender->sendVerifcationCode($email, $result['code']);
+                $this->email->sendVerifcationCode($email, $result['code']);
                 echo json_encode(['success' => true]);
             }
             else
@@ -94,7 +96,7 @@ class User
                 $stmt->bindParam(':email', $email);
                 $stmt->bindParam(':code', $code);
                 $stmt->execute();
-                $this->emailSender->sendVerifcationCode($email, $code);
+                $this->email->sendVerifcationCode($email, $code);
                 echo json_encode(['success' => true]);
             }
 
@@ -260,12 +262,6 @@ class User
 
         session_regenerate_id(true);
 
-        /*
-        session_destroy();
-        $_SESSION = [];
-        session_start();
-        */
-
 
         $info = $this->getAccessInfo();
 
@@ -290,7 +286,7 @@ class User
                     'email' => $user['email']
                 ];
                 
-                $this->emailSender->sendLoginMail($user['email'], $info);
+                $this->email->sendLoginMail($user['email'], $info);
 
                 $this->registerLogin($user['id'], $info);
 
@@ -314,25 +310,6 @@ class User
     }
 
 
-    // NON SO SE SERVE . CE QUELLA NELLA CLASSE COOKIE
-    public function checkIfAdmin($username)
-    {
-        try
-        {
-            $sql = "SELECT * FROM accounts WHERE username = :username AND admin = 1";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':username', $username);
-            $stmt->execute();
-            echo json_encode(['success' => true, 'isAdmin' => $stmt->fetch(PDO::FETCH_ASSOC) !== false]);
-
-
-        } catch (Exception $e) {
-            echo json_encode(['success' => false, 'message' => 'Error checking admin status: ' . $e->getMessage()]);
-        }
-
-    }
-
-
 }
 
 
@@ -351,9 +328,6 @@ if ($data) {
             break;
         case 'logoutUser':
             $user->logoutUser();
-            break;
-        case 'checkIfAdmin':
-            $user->checkIfAdmin($data['username']);
             break;
         case 'createEmailVerifyCode':
             $user->createEmailVerifyCode($data['firstname'], $data['lastname'], $data['username'], $data['email'], $data['password']);

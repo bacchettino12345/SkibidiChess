@@ -54,22 +54,14 @@
             }
         </script>
         <?php
+            use Skibidi\SessionChecker;
             require '../Backend/SessionChecker.php';
             $sessionChecker = new SessionChecker();
 
             if($sessionChecker->checkSession())
             {
-                echo "<script>alert(bocca)</script>";
-
                 $username = $_SESSION['user']['username'];
-                if($sessionChecker->checkAdmin())
-                {
-                    $admin = 1;
-                }
-                else
-                {
-                    $admin = 0;
-                }
+                $admin = $sessionChecker->checkAdmin();
             }
             else
             {
@@ -90,7 +82,7 @@
             {
                 enableLogin();
             }
-            if(admin === "1")
+            if(admin == true)
             {
                 enableAdmin();
             }
