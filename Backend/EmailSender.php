@@ -1,4 +1,7 @@
 <?php
+
+namespace Skibidi;
+
 require '../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;

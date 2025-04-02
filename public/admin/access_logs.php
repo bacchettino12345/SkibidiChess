@@ -1,12 +1,12 @@
 <?php
-require_once '../../Backend/SessionChecker.php';
-use Skibidi\SessionChecker;
-$sessionChecker = new SessionChecker();
+    require_once '../../Backend/SessionChecker.php';
+    use Skibidi\SessionChecker;
+    $sessionChecker = new SessionChecker();
 
-if (!$sessionChecker->checkSession())
-    header('Location: login.html');
-else if (!$sessionChecker->checkAdmin())
-    header('Location: not_authorized.php');
+    if(!$sessionChecker->checkSession())
+        header('Location: login.html');
+    else if(!$sessionChecker->checkAdmin())
+        header('Location: not_authorized.php');
 
 ?>
 
@@ -70,7 +70,6 @@ else if (!$sessionChecker->checkAdmin())
             });
 
             const data = await response.json();
-
             users = data['logins']
 
             users.forEach(user => {

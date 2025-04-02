@@ -1,9 +1,12 @@
 <?php
+
+namespace Skibidi;
+use Exception;
+use PDO;
 require_once __DIR__ . '/Database.php';
 require_once __DIR__ . '/EmailSender.php';
 require_once __DIR__ . '/SessionChecker.php';
 
-use Skibidi\Database\Database;
 
 require_once '../vendor/autoload.php';
 use DeviceDetector\DeviceDetector;

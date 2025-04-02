@@ -1,10 +1,12 @@
 <?php
-    use Skibidi\SessionChecker;
     require_once '../Backend/SessionChecker.php';
+    use Skibidi\SessionChecker;
     $sessionChecker = new SessionChecker();
 
     if(!$sessionChecker->checkSession())
         header('Location: login.html');
+    else if(!$sessionChecker->checkAdmin())
+        header('Location: not_authorized.php');
 
 ?>
 <!DOCTYPE html>

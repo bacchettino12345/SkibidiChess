@@ -3,9 +3,9 @@ namespace Skibidi;
 
 require_once __DIR__ . '/Database.php';
 
-use Skibidi\Database\Database;
+use Skibidi\Database;
 use PDO;
-use PDOException;
+use Exception;
 
 class SessionChecker
 {
@@ -35,7 +35,7 @@ class SessionChecker
                 
                 return (bool)$stmt->fetch(PDO::FETCH_ASSOC);
                 
-            } catch (PDOException $e) {
+            } catch (Exception $e) {
                 error_log("Session check error: " . $e->getMessage());
                 return false;
             }
@@ -61,7 +61,7 @@ class SessionChecker
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result && $result['admin'] == 1;
             
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             error_log("Admin check error: " . $e->getMessage());
             return false;
         }
