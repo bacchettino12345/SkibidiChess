@@ -2,6 +2,7 @@ import { Helper } from "../game/Helpers.js";
 import { AnimationMenager } from "../game/AnimationMenager.js";
 import { SimpleAnimation } from "../game/simpleAnimation.js";
 import { Piece } from "../game/pieces/Piece.js";
+import { bus } from "./Bus.js";
 
 export class PhysicalBoard
 {
@@ -48,7 +49,7 @@ export class PhysicalBoard
     squareFrom = null;
     squareTo = null;
 
-    constructor(virtualBoard)
+    constructor(virtualBoard, flipped)
     {
         this.boardElement = document.getElementById("ChessBoard");
         this.ctx = this.boardElement.getContext("2d");
@@ -56,7 +57,10 @@ export class PhysicalBoard
         
         this.virtualBoard = virtualBoard;
         
-        this.isFlipped = false;
+
+        this.playerIsWhite = flipped;
+
+        this.isFlipped = flipped;
         
         this.animationMenager = new AnimationMenager();
         
@@ -84,7 +88,7 @@ export class PhysicalBoard
         
         //Checks how to highlight the squares and whether to move a piece or not
 
-        if(this.selectedSquare === null && this.virtualBoard.getPieceAt(clickedSquare) !== null  && this.isPlayerMove(clickedSquare))
+        if(this.selectedSquare === null && this.virtualBoard.getPieceAt(clickedSquare) !== null  && this.virtualBoard.pieces[clickedSquare].isWhite !== this.playerIsWhite)
         {
             this.HighlightedSquares = [];
             this.HighlightedSquares.push(clickedSquare);
@@ -103,7 +107,7 @@ export class PhysicalBoard
 
                 this.selectedSquare = null;
             }
-            else if(this.virtualBoard.getPieceAt(clickedSquare) !== null && this.isPlayerMove(clickedSquare))
+            else if(this.virtualBoard.getPieceAt(clickedSquare) !== null && this.virtualBoard.pieces[clickedSquare].isWhite !== this.playerIsWhite)
             {
                 this.HighlightedSquares = [];
                 this.HighlightedSquares.push(clickedSquare);
@@ -382,8 +386,6 @@ export class PhysicalBoard
                 this.HighlightedSquares = [];
                 this.HighlightedSquares.push(piece.position);
                 this.HighlightedSquares.push(posIndex);
-
-                console.log("moving")
                 console.log(this.HighlightedSquares)
             },
 
@@ -411,7 +413,8 @@ export class PhysicalBoard
 
                 let posIndex = Helper.toLinear([endY, endX])
 
-                this.virtualBoard.movePiece(piece.position, posIndex);
+                this.virtualBoard.movePiece(piece.position, posIndex)
+                
                 this.animatingCircles.delete(piece.position)
                 this.renderSuggestion = false;
 

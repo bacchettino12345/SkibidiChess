@@ -147,6 +147,24 @@
         font-weight: 600;
     }
 
+    
+    .radio-inputs .radio input:checked + .colorChoice {
+        background-color: #ffffff0c;
+        font-weight: 600;
+    }
+
+    .radio-inputs .radio .colorChoice {
+        display: flex;
+        cursor: pointer;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        border: none;
+        padding: .5rem 0;
+        color: rgba(51, 65, 85, 1);
+        transition: all .15s ease-in-out;
+    }
 
     .unselectable {
         -webkit-touch-callout: none;

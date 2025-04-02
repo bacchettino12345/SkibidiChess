@@ -30,7 +30,7 @@
             Logged in as: <span id="username"></span>
         </div>
         <div id="GameMod" class="flex flex-col">
-            <a href="singleplayer.html"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] text-[1vw]">Singleplayer</button></a>
+            <a href="singleplayersettings.html"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] text-[1vw]">Singleplayer</button></a>
             <a href="multiplayer.php"><button id="Button" class="GreenBtn w-[20vw] h-[6vh] mt-[3vw] text-[1vw]">Multiplayer</button></a>
             <a href="./admin"><button id="adminButton" class="GreenBtn w-[20vw] h-[6vh] mt-[3vw] text-[1vw]" style="display: none;">Administration</button></a>
             <button id="logoutButton" class="RedBtn w-[20vw] h-[6vh] text-[1vw] mt-[3vw]" style="display: none;" onclick="logoutHandler()">Logout</button>

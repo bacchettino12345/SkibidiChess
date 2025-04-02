@@ -6,6 +6,7 @@ import { King } from "./pieces/King.js"
 import { Pawn } from "./pieces/Pawn.js"
 import { callAPI } from "../../../Backend/game/js/Stockfish.js"
 import { Helper } from "./Helpers.js";
+import { bus } from "./Bus.js";
 
 
 const piecesClasses = {
@@ -48,6 +49,8 @@ export class VirtualBoard{
         this.pieces = new Array(64).fill(null);
         this.isWhiteTurn = true;
         this.gameMode = document.body.getAttribute("mode");
+
+        bus.on("moveAI", (color) => this.requestNextMove(color) )
     }
 
     GenerateBoardFromFEN(FEN)
@@ -137,21 +140,33 @@ export class VirtualBoard{
             });
             
             this.rebuildFEN();
+
+            bus.emit("move", (startSquare, targetSquare))
+
             this.isWhiteTurn = !this.isWhiteTurn
-
-
-            if(this.promote === null)
-                this.requestNextMove();
-            else
-            {
-                let promotePanel = document.getElementById("Promote")
-                promotePanel.style.visibility = 'visible'
-            }
 
             return true;
         }
             
         return false;
+    }
+
+    requestNextMove(color = "white")
+    {
+
+        callAPI(this.CurrentFEN + " " + color[0] +  " - - 0 1", 2).then(response => {
+            
+            let moves = response.split("")
+            let fileFrom = moves[0].charCodeAt(0) - 97
+            let fileTo = moves[2].charCodeAt(0) - 97
+            
+            let rankFrom = 8 - parseInt(moves[1])
+            let rankTo = 8 - parseInt(moves[3])
+            let piece = this.pieces[Helper.toLinear([rankFrom, fileFrom])]
+
+            this.physicalBoard.startPieceMoveAnimation(piece, fileFrom, rankFrom, fileTo, rankTo, 200)
+        })
+   
     }
 
     promotion(type)
@@ -207,7 +222,7 @@ export class VirtualBoard{
                     newFEN += "/";
             }
         }
-
+ 
         this.CurrentFEN = newFEN;
     }
     
@@ -228,27 +243,7 @@ export class VirtualBoard{
     }
     
 
-    requestNextMove()
-    {
-        if(this.gameMode === "local" && !this.isWhiteTurn)
-        {
-               
-            callAPI(this.CurrentFEN + " b - - 0 1", 2).then(response =>{
-                let moves = response.split("")
-
-                let fileFrom = moves[0].charCodeAt(0) - 97
-                let fileTo = moves[2].charCodeAt(0) - 97
-
-                
-                let rankFrom = 8 - parseInt(moves[1])
-                let rankTo = 8 - parseInt(moves[3])
-
-                let piece = this.pieces[Helper.toLinear([rankFrom, fileFrom])]
-
-                this.physicalBoard.startPieceMoveAnimation(piece, fileFrom, rankFrom, fileTo, rankTo, 200)
-            })
-        }
-    }
+    
        
     isLowerCase(letter) {
         return letter === letter.toLowerCase();
