@@ -54,23 +54,25 @@
             }
         </script>
         <?php
-            // require '../Backend/CookiesCheck.php';
-            if(session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
+            require '../Backend/SessionChecker.php';
+            $sessionChecker = new SessionChecker();
 
-            if (isset($_SESSION['user']))
+            if($sessionChecker->checkSession())
             {
-                // LINKARE FILE PER CONTROLLO COOKIES
-                if(true) {
-                    $username = $_SESSION['user']['username'];
-                    $admin = $_SESSION['user']['admin'];
-                } else {
-                    $username = "Guest";
+                echo "<script>alert(bocca)</script>";
+
+                $username = $_SESSION['user']['username'];
+                if($sessionChecker->checkAdmin())
+                {
+                    $admin = 1;
+                }
+                else
+                {
                     $admin = 0;
                 }
             }
-            else {
+            else
+            {
                 $username = "Guest";
                 $admin = 0;
             }

@@ -4,7 +4,6 @@ require 'EmailSender.php';
 
 require_once '../vendor/autoload.php';
 use DeviceDetector\DeviceDetector;
-use DeviceDetector\Parser\Device\DeviceParserAbstract;
 
 class User
 {
@@ -50,6 +49,24 @@ class User
     }
 
 
+    public function destroyEmailVerifyCode($email, $code)
+    {
+        try
+        {
+            $sql = "DELETE FROM verification_codes WHERE code = :code AND email = :email";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':code', $code);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            return true;
+        }
+        catch (Exception $e)
+        {
+            echo json_encode(['success' => false, 'message' => 'Error during the email verification: ' . $e->getMessage()]); 
+            exit();
+        }
+    }
+
 
     public function createEmailVerifyCode($firstname, $lastname, $username, $email, $password)
     {
@@ -57,13 +74,14 @@ class User
 
         try
         {
-            // TOGLIERE COUNT E PREDERE IL CODICE E SPEDIRLO PER EMAIL
-            $sql = "SELECT COUNT(*) FROM verification_codes WHERE email = :email";
+            $sql = "SELECT * FROM verification_codes WHERE email = :email";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
-            if($stmt->fetchColumn() > 0)
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($result)
             {
+                $this->emailSender->sendVerifcationCode($email, $result['code']);
                 echo json_encode(['success' => true]);
             }
             else
@@ -76,19 +94,20 @@ class User
                 $stmt->bindParam(':email', $email);
                 $stmt->bindParam(':code', $code);
                 $stmt->execute();
-                /// SPEDIRE CODICE PER EMAIL
+                $this->emailSender->sendVerifcationCode($email, $code);
                 echo json_encode(['success' => true]);
             }
 
         } catch (Exception $e)
         {
-            echo json_encode(['success' => false, 'error' => 'Internal Database erorr: ' . $e->getMessage()]);
+            echo json_encode(['success' => false, 'message' => 'Internal Database erorr: ' . $e->getMessage()]);
         }
     }
 
 
     private function verifyEmailVerifyCode($email, $code)
     {
+
         try
         {
             $sql = "SELECT COUNT(*) FROM verification_codes WHERE email = :email AND code = :code";
@@ -102,7 +121,7 @@ class User
                 return false;
         } catch (Exception $e)
         {
-            echo json_encode(['success' => false, 'message' => 'Errore durante la verifica del codice: ' . $e->getMessage()]);
+            echo json_encode(['success' => false, 'message' => 'Error during the email verification: ' . $e->getMessage()]);
             exit();
         }
     }
@@ -123,26 +142,30 @@ class User
 
         if($this->verifyEmailVerifyCode($email, $code))
         {
-            try
+            if($this->destroyEmailVerifyCode($email, $code))
             {
-                $sql = "INSERT INTO accounts (username, firstname, lastname, email, password) VALUES (:username, :firstname, :lastname, :email, :password)";
-                $stmt = $this->conn->prepare($sql);
-                $stmt->bindParam(':username', $username);
-                $stmt->bindParam(':firstname', $firstname);
-                $stmt->bindParam(':lastname', $lastname);
-                $stmt->bindParam(':email', $email);
-                $stmt->bindParam(':password', $password);
-                $stmt->execute(); 
-    
-                echo json_encode(['success' => true]);
-            } catch (Exception $e)
-            {
-                echo json_encode(['success' => false, 'message' => 'Error creating user: ' . $e->getMessage()]); 
+                try
+                {
+                    $sql = "INSERT INTO accounts (username, firstname, lastname, email, password) VALUES (:username, :firstname, :lastname, :email, :password)";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bindParam(':username', $username);
+                    $stmt->bindParam(':firstname', $firstname);
+                    $stmt->bindParam(':lastname', $lastname);
+                    $stmt->bindParam(':email', $email);
+                    $stmt->bindParam(':password', $password);
+                    $stmt->execute(); 
+        
+                    echo json_encode(['success' => true]);
+                } catch (Exception $e)
+                {
+                    echo json_encode(['success' => false, 'message' => 'Error creating user: ' . $e->getMessage()]); 
+                }
+                
             }
         }
         else
         {
-            echo json_encode(['success' => false, 'message' => 'Wrong verification code.']); 
+            echo json_encode(['success' => false, 'message' => 'Wrong verification code. Check if it is valid and not expired.']); 
         }
 
     }
@@ -290,6 +313,8 @@ class User
 
     }
 
+
+    // NON SO SE SERVE . CE QUELLA NELLA CLASSE COOKIE
     public function checkIfAdmin($username)
     {
         try

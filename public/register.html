@@ -14,7 +14,35 @@
 <body class="bg-[#302E2B]">
     <script>
 
+        function disableRegisterBtn() {
+            document.querySelector('#ButtonRegister').disabled = true;
+            document.querySelector('#ButtonRegister').classList.remove('GreenBtn');
+            document.querySelector('#ButtonRegister').classList.add('DisabledBtn');
+        }
+
+        function disableVerifyBtn() {
+            document.querySelector('#ButtonVerify').disabled = true;
+            document.querySelector('#ButtonVerify').classList.remove('GreenBtn');
+            document.querySelector('#ButtonVerify').classList.add('DisabledBtn');
+        }
+
+        function enableRegisterBtn() {
+            document.querySelector('#ButtonRegister').disabled = false;
+            document.querySelector('#ButtonRegister').classList.remove('DisabledBtn');
+            document.querySelector('#ButtonRegister').classList.add('GreenBtn');
+        }
+
+        function enableRegisterBtn() {
+            document.querySelector('#ButtonVerify').disabled = false;
+            document.querySelector('#ButtonVerify').classList.remove('DisabledBtn');
+            document.querySelector('#ButtonVerify').classList.add('GreenBtn');
+        }
+
+
+
         async function createVerificationCodeHandler() {
+
+            disableRegisterBtn();
 
             const firstname = document.getElementById("firstname").value;
             const lastname = document.getElementById("lastname").value;
@@ -22,7 +50,7 @@
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
 
-            
+
             const response = await fetch('../Backend/User.php', {
                 method: 'POST',
                 headers: {
@@ -37,24 +65,27 @@
                     password: password
                 })
             })
-            
+
             const data = await response.json();
             console.log(data);
-            
+
             if (data.success) {
-                
+
                 document.querySelector('#verify').classList.remove('hidden');
                 document.querySelector('#register').classList.add('hidden');
             } else {
+                enableRegisterBtn();
                 const errorBanner = document.getElementById("validationError");
                 errorBanner.style.display = "block";
                 const message = document.getElementById("validationErrorMessage");
                 message.textContent = data.message;
-            } 
+            }
         }
 
 
         async function registerHandler() {
+
+            disableVerifyBtn();
 
             const firstname = document.getElementById("firstname").value;
             const lastname = document.getElementById("lastname").value;
@@ -85,16 +116,17 @@
             if (data.success) {
                 window.location.href = 'AccountCreatedRedirect.html';
             } else {
+                enableRegisterBtn();
                 const errorBanner = document.getElementById("creationError");
                 errorBanner.style.display = "block";
                 const message = document.getElementById("creationErrorMessage");
                 message.textContent = data.message;
             }
-            
+
         }
 
     </script>
-    <img src="../Assets/Images/Logo.png" class="w-[400px] mb-[5vh] text-center mx-auto mt-32">
+    <img src="../Assets/Images/Logo.png" class="w-[400px] mb-[5vh] text-center mx-auto mt-24">
     <div id="register">
         <form id="auth" class="w-[450px] mx-auto mt-[5px] p-[20px] pb-[25px] bg-[#1c1a19] rounded-[10px]"
             onsubmit="event.preventDefault(); createVerificationCodeHandler();">
@@ -149,7 +181,7 @@
                 </div>
             </div>
 
-            <button id="Button" type="submit" class="mt-1.5 GreenBtn w-[100%] h-[50px] text-[1vw]">Register an
+            <button id="ButtonRegister" type="submit" class="mt-1.5 GreenBtn w-[100%] h-[50px] text-[1vw]">Register an
                 account</button>
         </form>
         <p class="text-gray-400 text-center mt-2 mb-10">Already have an account? <u><a href="./login.html">Click here to
@@ -176,12 +208,13 @@
                 </div>
             </div>
 
-            <button id="Button" type="submit" class="mt-1.5 GreenBtn w-[100%] h-[50px] text-[1vw]">
+            <button id="ButtonVerify" type="submit" class="mt-1.5 GreenBtn w-[100%] h-[50px] text-[1vw]">
                 Verify Email Address
             </button>
         </form>
         <p class="text-gray-400 text-center mt-2 mb-10">
-            <u><a onclick="">Resend code</a></u>
+            Any problem?
+            <u><a onclick="createVerificationCodeHandler()" href="#">Click here to resend the code.</a></u>
         </p>
     </div>
 </body>

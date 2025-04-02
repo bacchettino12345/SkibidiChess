@@ -1,5 +1,5 @@
 <?php
-    require './check_login_admin.php';
+    require '../../Backend/User.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

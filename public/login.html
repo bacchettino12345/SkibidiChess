@@ -15,15 +15,15 @@
     <script>
 
         function disableLoginBtn() {
-            document.querySelector('#Button').disabled = true;
-            document.querySelector('#Button').classList.remove('GreenBtn');
-            document.querySelector('#Button').classList.add('DisabledBtn');
+            document.querySelector('#ButtonLogin').disabled = true;
+            document.querySelector('#ButtonLogin').classList.remove('GreenBtn');
+            document.querySelector('#ButtonLogin').classList.add('DisabledBtn');
         }
 
         function enableLoginBtn() {
-            document.querySelector('#Button').disabled = false;
-            document.querySelector('#Button').classList.remove('DisabledBtn');
-            document.querySelector('#Button').classList.add('GreenBtn');
+            document.querySelector('#ButtonLogin').disabled = false;
+            document.querySelector('#ButtonLogin').classList.remove('DisabledBtn');
+            document.querySelector('#ButtonLogin').classList.add('GreenBtn');
         }
 
         async function loginHandler() {
@@ -62,7 +62,7 @@
         }
     </script>
 
-    <img src="../Assets/Images/Logo.png" class="w-[400px] mb-[5vh] text-center mx-auto mt-32">
+    <img src="../Assets/Images/Logo.png" class="w-[400px] mb-[5vh] text-center mx-auto mt-24">
 
     <form id="auth" class="w-[450px] mx-auto mt-[5px] pb-[30px] p-[20px] bg-[#1c1a19] rounded-[10px]"
         onsubmit="event.preventDefault(); loginHandler();">
@@ -95,7 +95,7 @@
             </div>
         </div>
 
-        <button id="Button" type="submit" class="mt-1.5 GreenBtn w-[100%] h-[50px] text-[1vw]">Login</button>
+        <button id="ButtonLogin" type="submit" class="mt-1.5 GreenBtn w-[100%] h-[50px] text-[1vw]">Login</button>
 
     </form>
     <p class="text-gray-400 text-center mt-2 mb-10">Don't have an account yet? <u><a href="./register.html">Click here to register one.</a></u></p>
