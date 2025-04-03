@@ -5,7 +5,7 @@ import { gameMode } from "./GameMode.js"
 
 export class SinglePlayer extends gameMode
 {
-    constructor(localrandom = 1)
+    constructor(localrandom = 1, difficulty = 3)
     {
         super(localrandom)
 
@@ -13,6 +13,8 @@ export class SinglePlayer extends gameMode
         this.p2 = new AI(this.otherColor)
 
         this.game = new Game(this.p1, this.p2)
+
+        this.virtualBoard.AIstrength = difficulty * 3
     }
 
     suggestion()

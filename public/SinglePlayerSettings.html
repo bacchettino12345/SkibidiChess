@@ -15,53 +15,66 @@
 
             <p class="text-white font-bold">Difficulty</p>
           
-            <div class="radio-inputs lg:w-full w-[60vw] mt-[1vh] lg:mt-[2vh] mr-2 ml-2">
+            <div class="radio-inputs lg:w-full w-[60vw] mt-[1vh] lg:mt-[2vh] mr-2 ml-2" id="DifficultyGroup">
                 
                 <label class="radio">
-                  <input type="radio" name="Difficulty" >
+                  <input type="radio" name="Difficulty" value="1">
                   <span class="name">1</span>
                 </label>
                 <label class="radio">
-                  <input type="radio" name="Difficulty">
+                  <input type="radio" name="Difficulty" value="2">
                   <span class="name">2</span>
                 </label>
                 <label class="radio">
-                  <input type="radio" name="Difficulty" checked>
+                  <input type="radio" name="Difficulty" value="3" checked>
                   <span class="name">3</span>
                 </label>
                 <label class="radio">
-                  <input type="radio" name="Difficulty">
+                  <input type="radio" name="Difficulty" value="4">
                   <span class="name">4</span>
                 </label>
                 <label class="radio">
-                  <input type="radio" name="Difficulty">
+                  <input type="radio" name="Difficulty" value="5">
                   <span class="name">5</span>
                 </label>
             </div>
 
             <p class="text-white font-bold mt-[2vh] lg:mt-[3vh]">Color</p>
 
-            <div class="radio-inputs lg:w-[10vw] w-[20vw] mt-[1vh] lg:mt-[1vh]  mr-2 ml-2 gap-x-1.5 bg-[#131211] ">
+            <div class="radio-inputs lg:w-[10vw] w-[20vw] mt-[1vh] lg:mt-[1vh]  mr-2 ml-2 gap-x-1.5 bg-[#131211] " id="ColorGroup">
 
                 <label class="radio w-fit ">
-                  <input type="radio" name="Color" >
+                  <input type="radio" name="Color" value="1">
                   <img src="../Assets/Images/WhiteColor.svg" class="h-full w-full aspect-square colorChoice" alt="">
                 </label>
                 <label class="radio aspect-square">
-                  <input type="radio" name="Color" checked>
+                  <input type="radio" name="Color" value="2" checked>
                   <img src="../Assets/Images/MixedColor.svg" class="h-full w-full aspect-square colorChoice" alt="">
                 </label>
                 <label class="radio aspect-square">
-                  <input type="radio" name="Color">
+                  <input type="radio" name="Color" value="0">
                   <img src="../Assets/Images/BlackColor.svg" class="h-full w-full aspect-square colorChoice" alt="">
                 </label>
                 </label>
             </div>
 
 
-            <a href="singleplayer.html"> <button class="GreenBtn mt-5">Play</button></a>
+            <button class="GreenBtn mt-5" onclick="GetValues()">Play</button>
 
+            <script>
 
+              window.GetValues = () => {
+                // Get selected difficulty (returns value like "3")
+                const difficulty = document.querySelector('#DifficultyGroup input:checked').value;
+
+                // Get selected color (returns value like "white")
+                const color = document.querySelector('#ColorGroup input:checked').value;
+
+                
+                window.location.href = `singleplayer.html?difficulty=${difficulty}&color=${color}`;
+
+              }
+            </script>
 
         </div>
     </div>
