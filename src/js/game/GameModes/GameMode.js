@@ -16,13 +16,30 @@ export class gameMode
         this.virtualBoard.GenerateBoardFromFEN(this.startingFEN);
         
         
-        this.physicalBoard = new PhysicalBoard(this.virtualBoard, this.localIsWhite());
+        this.physicalBoard = new PhysicalBoard( this.virtualBoard, this.localIsWhite() );
         this.virtualBoard.physicalBoard = this.physicalBoard
 
         this.setupEvents()
+        this.buildDom()
 
         window.addEventListener('resize', () => this.physicalBoard.resizeBoard(), false);
+
+    }
+
+    buildDom()
+    {
+        const promotePanel = document.getElementById("Promote");
         
+        const images = promotePanel.querySelectorAll("img");
+        
+        images.forEach(element => {
+
+          const colorChar = this.localColor === "white" ? '1' : '0'; 
+        
+          const currentType = element.src.split("/").pop()[0];
+        
+          element.src = `../Assets/Images/${currentType}${colorChar}.svg`;
+        });
     }
 
 

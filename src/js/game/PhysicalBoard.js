@@ -1,7 +1,6 @@
 import { Helper } from "../game/Helpers.js";
 import { AnimationMenager } from "../game/AnimationMenager.js";
 import { SimpleAnimation } from "../game/simpleAnimation.js";
-import { Piece } from "../game/pieces/Piece.js";
 import { bus } from "./Bus.js";
 
 export class PhysicalBoard
@@ -101,6 +100,7 @@ export class PhysicalBoard
         {
             if(this.virtualBoard.canPieceMove(this.selectedSquare, clickedSquare))
             {
+
                 const piece = this.virtualBoard.getPieceAt(this.selectedSquare)
 
                 let startCoords = Helper.to2D(this.selectedSquare);
@@ -112,17 +112,22 @@ export class PhysicalBoard
                 const targetRank = Helper.to2D(clickedSquare)[0];
                 const isPromotion = isPawn && (targetRank === 0 || targetRank === 7);
                 
-                let promotionType = 'q';
-                if(isPromotion) {
-                    promotionType = await this.showPromotionUI(piece.isWhite);
-                    this.virtualBoard.switchPiece(this.selectedSquare, promotionType)
-                }
-                
-                this.startPieceMoveAnimation(this.virtualBoard.pieces[this.selectedSquare], startCoords[1], startCoords[0], endCoords[1], endCoords[0], 100 );
-                
+
                 this.selectedSquare = null;
 
+                await this.startPieceMoveAnimation(piece, startCoords[1], startCoords[0], endCoords[1], endCoords[0], 100 );
                 
+
+                if(isPromotion) {
+                    const promotionType = await this.showPromotionUI(piece.isWhite);
+
+                    this.virtualBoard.switchPiece(clickedSquare, promotionType)   
+                }
+
+
+                
+                bus.emit("move", this.selectedSquare, clickedSquare)
+
             }
             else if(this.virtualBoard.getPieceAt(clickedSquare) !== null && this.virtualBoard.pieces[clickedSquare].isWhite !== this.playerIsWhite)
             {
@@ -138,22 +143,16 @@ export class PhysicalBoard
 
 
     showPromotionUI(isWhite) {
+
         return new Promise((resolve) => {
+
             const promotePanel = document.getElementById("Promote");
             const buttons = promotePanel.querySelectorAll("button");
-    
+      
+
             // Remove previous click handlers
             buttons.forEach(btn => btn.onclick = null);
-    
-            // Position panel near the promotion square
-            const targetSquare = this.selectedSquare;
-            const [y, x] = Helper.to2D(targetSquare);
-            const squareX = x * this.squareWidth;
-            const squareY = y * this.squareHeight;
-            
-            // Adjust position based on board flip
-            promotePanel.style.left = `${squareX + this.squareWidth/2 - 60}px`;
-            promotePanel.style.top = `${squareY + this.squareHeight/2 - 60}px`;
+
     
             // Handle button clicks
             const clickHandler = (type) => {
@@ -165,6 +164,7 @@ export class PhysicalBoard
             buttons.forEach(btn => {
                 btn.onclick = () => clickHandler(btn.dataset.type);
             });
+
     
             promotePanel.style.visibility = 'visible';
         });
@@ -427,58 +427,63 @@ export class PhysicalBoard
 
     startPieceMoveAnimation(piece, startX, startY, endX, endY, duration = 300)
     {
-        const anim = new SimpleAnimation({
-            duration, 
+        return new Promise((resolve) => {
 
-            onStart: () => {
-
-                let posIndex = Helper.toLinear([endY, endX])
-                
-                this.HighlightedSquares = [];
-                this.HighlightedSquares.push(piece.position);
-                this.HighlightedSquares.push(posIndex);
-                console.log(this.HighlightedSquares)
-            },
-
-            onUpdate: (progress) => {
-
-                piece.isMoving = true;
-
-                anim.isPlaying = true;
-
-                let currentX = startX + (endX - startX) * progress;
-                let currentY = startY + (endY - startY) * progress;
-                
-                this.RenderBoard();
-
-                this.isFlipped ? this.drawPieceAtCoords(piece,  currentX, currentY) : this.drawPieceAtCoords(piece, 7-  currentX, 7-  currentY) 
+            const anim = new SimpleAnimation({
+                duration, 
+    
+                onStart: () => {
+    
+                    let posIndex = Helper.toLinear([endY, endX])
                     
-            },
+                    this.HighlightedSquares = [];
+                    this.HighlightedSquares.push(piece.position);
+                    this.HighlightedSquares.push(posIndex);
+    
+                    
+                    this.virtualBoard.movePiece(piece.position, posIndex)
+    
+                },
+    
+                onUpdate: (progress) => {
+    
+                    piece.isMoving = true;
+    
+                    anim.isPlaying = true;
+    
+                    let currentX = startX + (endX - startX) * progress;
+                    let currentY = startY + (endY - startY) * progress;
+                    
+                    this.RenderBoard();
+    
+                    this.isFlipped ? this.drawPieceAtCoords(piece,  currentX, currentY) : this.drawPieceAtCoords(piece, 7-  currentX, 7-  currentY) 
+                        
+                },
+    
+                onComplete: () => {
+    
+                    piece.isMoving = false;
+    
+                    anim.isPlaying = false;
+    
+    
+                    let posIndex = Helper.toLinear([endY, endX])
+    
+                    
+                    this.animatingCircles.delete(piece.position)
+                    this.renderSuggestion = false;
+    
+                    this.RenderBoard();
 
-            onComplete: () => {
-
-                piece.isMoving = false;
-
-                anim.isPlaying = false;
-
-
-                let posIndex = Helper.toLinear([endY, endX])
-
-                this.virtualBoard.movePiece(piece.position, posIndex)
-                
-                this.animatingCircles.delete(piece.position)
-                this.renderSuggestion = false;
-
-                
-
-                this.RenderBoard();
-            },
-
-
-            easing: this.easeInOutQuad
-        });
-
-        this.animationMenager.addAnimation(anim);
+                    resolve()
+                },
+    
+    
+                easing: this.easeInOutQuad
+            });
+    
+            this.animationMenager.addAnimation(anim);
+        })
     }   
 
     startLegalMovesAnimation(squareIndex, startRadius, endRadius, duration) 

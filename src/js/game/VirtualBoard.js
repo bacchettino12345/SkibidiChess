@@ -87,7 +87,6 @@ export class VirtualBoard{
 
 
         this.calculateLegalMoves()
-        console.log(this.pieces)
     }
 
 
@@ -106,9 +105,8 @@ export class VirtualBoard{
         if(startSquare !== null && this.getPieceAt(startSquare).legalMoves.includes(targetSquare))
         {
 
+
             const piece = this.getPieceAt(startSquare)
-            const isPawn = piece.type.toLowerCase() === "p"
-            const targetRank = Helper.to2D(targetSquare)[0]
 
 
             if(this.pieces[startSquare].type.toLowerCase() == "p")
@@ -123,8 +121,9 @@ export class VirtualBoard{
 
 
             this.pieces[targetSquare] = piece;
-            this.pieces[startSquare] = null;
             this.pieces[targetSquare].position = targetSquare;
+
+            this.pieces[startSquare] = null;
 
             
             for(let piece of this.pieces)
@@ -137,9 +136,9 @@ export class VirtualBoard{
             
             this.rebuildFEN();
 
-            bus.emit("move", (startSquare, targetSquare))
-
             this.isWhiteTurn = !this.isWhiteTurn
+
+            
 
             return true;
         }
@@ -148,33 +147,41 @@ export class VirtualBoard{
     }
 
 
-    switchPiece(targetSquare, promotionType)
+    switchPiece(piecePos, promotionType)
     {
-
+        
         const pieceClass = piecesClasses[promotionType]
 
         if(pieceClass)
-            this.pieces[targetSquare] = new pieceClass(this.pieces[targetSquare].isWhite, targetSquare)
+            this.pieces[piecePos] = new pieceClass(this.pieces[piecePos].isWhite, piecePos)
         
-        this.pieces[targetSquare].position = targetSquare;
-        console.log(this.pieces)
+        this.calculateLegalMoves()
     }
 
-    requestNextMove(color = "white")
+    async requestNextMove(color = "white")
     {
-
-        callAPI(this.CurrentFEN + " " + color[0] +  " - - 0 1", 2).then(response => {
+        const response = await callAPI(this.CurrentFEN + " " + color[0] +  " - - 0 1", 5)
             
-            let moves = response.split("")
-            let fileFrom = moves[0].charCodeAt(0) - 97
-            let fileTo = moves[2].charCodeAt(0) - 97
-            
-            let rankFrom = 8 - parseInt(moves[1])
-            let rankTo = 8 - parseInt(moves[3])
-            let piece = this.pieces[Helper.toLinear([rankFrom, fileFrom])]
+        let moves = response[0].split("")
+        let fileFrom = moves[0].charCodeAt(0) - 97
+        let fileTo = moves[2].charCodeAt(0) - 97
+        
+        let rankFrom = 8 - parseInt(moves[1])
+        let rankTo = 8 - parseInt(moves[3])
+        let startPos = Helper.toLinear([rankFrom, fileFrom])
+        let piece = this.pieces[startPos]
+        
+        await this.physicalBoard.startPieceMoveAnimation(piece, fileFrom, rankFrom, fileTo, rankTo, 200)
 
-            this.physicalBoard.startPieceMoveAnimation(piece, fileFrom, rankFrom, fileTo, rankTo, 200)
-        })
+        let finalPos = Helper.toLinear([rankTo, fileTo])
+
+        if(response[1])
+            this.switchPiece(finalPos, moves[4])
+
+        bus.emit("move", startPos, finalPos)
+
+        this.physicalBoard.RenderBoard()
+        
    
     }
 
@@ -190,7 +197,6 @@ export class VirtualBoard{
 
         
         let promotePanel = document.getElementById("Promote")
-        console.log(this.pieces)
         promotePanel.style.visibility = 'hidden'
         this.promote = null
         this.requestNextMove()

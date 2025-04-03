@@ -6,7 +6,13 @@ export async function callAPI(fen, depth) {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    return data.bestmove.substring(9, 13);
+    console.log(data.bestmove)
+
+    const bestmove = data.bestmove.split(" ")
+    const promotion = bestmove[1].length === 5 ? true : false
+    
+    return [bestmove[1], promotion];
+
   } catch (error) {
     console.error('Errore durante la chiamata API:', error);
     throw error;

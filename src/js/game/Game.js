@@ -28,7 +28,6 @@
                 if(move)
                 {
                     this.switchTurn()
-                    console.log("moved" + currentPlayer.color)
                 }
             }
         }
