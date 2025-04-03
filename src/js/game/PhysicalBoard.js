@@ -71,7 +71,7 @@ export class PhysicalBoard
         this.boardElement.addEventListener("mousemove", (event) => this.handleMove(event));
     }
     
-    handleClick(event) 
+    async handleClick(event) 
     {
         const rect = this.boardElement.getBoundingClientRect();
 
@@ -85,6 +85,8 @@ export class PhysicalBoard
         }
 
         let clickedSquare = Helper.coordsToIndex(x, y, this.squareWidth, this.squareHeight);
+
+
         
         //Checks how to highlight the squares and whether to move a piece or not
 
@@ -99,13 +101,28 @@ export class PhysicalBoard
         {
             if(this.virtualBoard.canPieceMove(this.selectedSquare, clickedSquare))
             {
+                const piece = this.virtualBoard.getPieceAt(this.selectedSquare)
+
                 let startCoords = Helper.to2D(this.selectedSquare);
                 let endCoords =  Helper.to2D(clickedSquare);
 
 
+                // Check for pawn promotion
+                const isPawn = piece.type.toLowerCase() === 'p'; // Fix: Added parentheses
+                const targetRank = Helper.to2D(clickedSquare)[0];
+                const isPromotion = isPawn && (targetRank === 0 || targetRank === 7);
+                
+                let promotionType = 'q';
+                if(isPromotion) {
+                    promotionType = await this.showPromotionUI(piece.isWhite);
+                    this.virtualBoard.switchPiece(this.selectedSquare, promotionType)
+                }
+                
                 this.startPieceMoveAnimation(this.virtualBoard.pieces[this.selectedSquare], startCoords[1], startCoords[0], endCoords[1], endCoords[0], 100 );
-
+                
                 this.selectedSquare = null;
+
+                
             }
             else if(this.virtualBoard.getPieceAt(clickedSquare) !== null && this.virtualBoard.pieces[clickedSquare].isWhite !== this.playerIsWhite)
             {
@@ -119,6 +136,40 @@ export class PhysicalBoard
 
     }
 
+
+    showPromotionUI(isWhite) {
+        return new Promise((resolve) => {
+            const promotePanel = document.getElementById("Promote");
+            const buttons = promotePanel.querySelectorAll("button");
+    
+            // Remove previous click handlers
+            buttons.forEach(btn => btn.onclick = null);
+    
+            // Position panel near the promotion square
+            const targetSquare = this.selectedSquare;
+            const [y, x] = Helper.to2D(targetSquare);
+            const squareX = x * this.squareWidth;
+            const squareY = y * this.squareHeight;
+            
+            // Adjust position based on board flip
+            promotePanel.style.left = `${squareX + this.squareWidth/2 - 60}px`;
+            promotePanel.style.top = `${squareY + this.squareHeight/2 - 60}px`;
+    
+            // Handle button clicks
+            const clickHandler = (type) => {
+                promotePanel.style.visibility = 'hidden';
+                resolve(type);
+            };
+    
+            // Assign new handlers using dataset
+            buttons.forEach(btn => {
+                btn.onclick = () => clickHandler(btn.dataset.type);
+            });
+    
+            promotePanel.style.visibility = 'visible';
+        });
+    }
+    
 
     isPlayerMove(clickedSquare)
     {

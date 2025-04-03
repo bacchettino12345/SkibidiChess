@@ -5,10 +5,12 @@ export class gameMode
 {
     constructor(random)
     {
-        this.startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        this.startingFEN = "8/3p4/8/8/8/8/5P2/8 w - - 0 1";
 
         this.localColor = random === 0 ? "black" : "white"
         this.otherColor = random === 0 ? "white" : "black"
+
+        
 
         this.virtualBoard = new VirtualBoard();
         this.virtualBoard.GenerateBoardFromFEN(this.startingFEN);

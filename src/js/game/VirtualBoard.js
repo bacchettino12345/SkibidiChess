@@ -106,7 +106,12 @@ export class VirtualBoard{
         if(startSquare !== null && this.getPieceAt(startSquare).legalMoves.includes(targetSquare))
         {
 
-            if(this.pieces[startSquare].type == "P" || "p")
+            const piece = this.getPieceAt(startSquare)
+            const isPawn = piece.type.toLowerCase() === "p"
+            const targetRank = Helper.to2D(targetSquare)[0]
+
+
+            if(this.pieces[startSquare].type.toLowerCase() == "p")
                 this.pieces[startSquare].firstMove = false;
 
 
@@ -117,10 +122,9 @@ export class VirtualBoard{
             }
 
 
-            this.pieces[targetSquare] = this.pieces[startSquare];
+            this.pieces[targetSquare] = piece;
             this.pieces[startSquare] = null;
             this.pieces[targetSquare].position = targetSquare;
-
 
             
             for(let piece of this.pieces)
@@ -130,14 +134,6 @@ export class VirtualBoard{
             }
 
 
-            this.pieces.forEach(element => {
-                if (element !== null && (element.type === 'p' || element.type === 'P')) {
-                    const row = Helper.to2D(element.position)[0];
-                    if (row === 0 || row === 7) {
-                        this.promote = element.position
-                    }
-                }
-            });
             
             this.rebuildFEN();
 
@@ -149,6 +145,19 @@ export class VirtualBoard{
         }
             
         return false;
+    }
+
+
+    switchPiece(targetSquare, promotionType)
+    {
+
+        const pieceClass = piecesClasses[promotionType]
+
+        if(pieceClass)
+            this.pieces[targetSquare] = new pieceClass(this.pieces[targetSquare].isWhite, targetSquare)
+        
+        this.pieces[targetSquare].position = targetSquare;
+        console.log(this.pieces)
     }
 
     requestNextMove(color = "white")
