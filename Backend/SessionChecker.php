@@ -26,7 +26,7 @@ class SessionChecker
         if(isset($_SESSION['user'])) {
             try {
                 $session = $_SESSION['user'];
-                $sql = "SELECT * FROM accounts WHERE username = :user AND id = :id AND email = :email";
+                $sql = "SELECT * FROM accounts WHERE username = :user AND id = :id AND email = :email AND active = 1";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->bindParam(':user', $session['username'], PDO::PARAM_STR);
                 $stmt->bindParam(':email', $session['email'], PDO::PARAM_STR);

@@ -477,7 +477,7 @@ class EmailSender
 
                             <h3>' . $code . '</h3>
 
-                            <p>This code expires 5 minutes after its creation.</p>
+                            <p>This code expires 10 minutes after its creation.</p>
                         </div>
                         
                         <!-- Footer -->

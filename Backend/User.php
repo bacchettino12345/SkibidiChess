@@ -1,14 +1,17 @@
 <?php
 
 namespace Skibidi;
+
 use Exception;
 use PDO;
+
 require_once __DIR__ . '/Database.php';
 require_once __DIR__ . '/EmailSender.php';
 require_once __DIR__ . '/SessionChecker.php';
 
 
 require_once '../vendor/autoload.php';
+
 use DeviceDetector\DeviceDetector;
 
 class User
@@ -38,17 +41,21 @@ class User
         if (empty($username) || empty($firstname) || empty($lastname) || empty($email) || empty($password)) {
             echo json_encode(['success' => false, 'message' => 'All fields are required.']);
             exit();
-        } 
-        else if (!preg_match("/^[a-zA-Z0-9_]*$/", $username)) {
-            echo json_encode(['success' => false , 'message' => 'Invalid username. Only letters, numbers, and underscores are allowed.']);
+        } else if (!preg_match("/^[a-zA-Z0-9_]*$/", $username)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid username. Only letters, numbers, and underscores are allowed.']);
             exit();
-        } 
-        else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             echo json_encode(['success' => false, 'message' => 'Invalid email format.']);
             exit();
-        }
-        else if ($this->isUsernameTaken($username)) {
+        } else if ($this->isUsernameTaken($username)) {
             echo json_encode(['success' => false, 'message' => 'Username already taken.']);
+            exit();
+        } else if (strlen($username) < 3) {
+            echo json_encode(['success' => false, 'message' => 'Username must containt 3 characters or more.']);
+            exit();
+        }
+        else if (strlen($password) < 8) {
+            echo json_encode(['success' => false, 'message' => 'Password must containt 8 characters or more.']);
             exit();
         }
     }
@@ -56,18 +63,15 @@ class User
 
     public function destroyEmailVerifyCode($email, $code)
     {
-        try
-        {
+        try {
             $sql = "DELETE FROM verification_codes WHERE code = :code AND email = :email";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':code', $code);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
             return true;
-        }
-        catch (Exception $e)
-        {
-            echo json_encode(['success' => false, 'message' => 'Error during the email verification: ' . $e->getMessage()]); 
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Error during the email verification: ' . $e->getMessage()]);
             exit();
         }
     }
@@ -77,20 +81,16 @@ class User
     {
         $this->registrationInputValidator($username, $firstname, $lastname, $email, $password);
 
-        try
-        {
+        try {
             $sql = "SELECT * FROM verification_codes WHERE email = :email";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            if($result)
-            {
+            if ($result) {
                 $this->email->sendVerifcationCode($email, $result['code']);
                 echo json_encode(['success' => true]);
-            }
-            else
-            {
+            } else {
 
                 $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
@@ -102,9 +102,7 @@ class User
                 $this->email->sendVerifcationCode($email, $code);
                 echo json_encode(['success' => true]);
             }
-
-        } catch (Exception $e)
-        {
+        } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => 'Internal Database erorr: ' . $e->getMessage()]);
         }
     }
@@ -113,19 +111,17 @@ class User
     private function verifyEmailVerifyCode($email, $code)
     {
 
-        try
-        {
+        try {
             $sql = "SELECT COUNT(*) FROM verification_codes WHERE email = :email AND code = :code";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':code', $code);
             $stmt->execute();
-            if($stmt->fetchColumn() > 0)
+            if ($stmt->fetchColumn() > 0)
                 return true;
             else
                 return false;
-        } catch (Exception $e)
-        {
+        } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => 'Error during the email verification: ' . $e->getMessage()]);
             exit();
         }
@@ -134,23 +130,19 @@ class User
 
     public function createUser($firstname, $lastname, $username, $email, $password, $code)
     {
-        if(session_status() == PHP_SESSION_NONE)
-        {
+        if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
         session_destroy();
         $_SESSION = [];
 
         $password = password_hash($password, PASSWORD_BCRYPT);
-    
+
         $this->registrationInputValidator($username, $firstname, $lastname, $email, $password);
 
-        if($this->verifyEmailVerifyCode($email, $code))
-        {
-            if($this->destroyEmailVerifyCode($email, $code))
-            {
-                try
-                {
+        if ($this->verifyEmailVerifyCode($email, $code)) {
+            if ($this->destroyEmailVerifyCode($email, $code)) {
+                try {
                     $sql = "INSERT INTO accounts (username, firstname, lastname, email, password) VALUES (:username, :firstname, :lastname, :email, :password)";
                     $stmt = $this->conn->prepare($sql);
                     $stmt->bindParam(':username', $username);
@@ -158,27 +150,23 @@ class User
                     $stmt->bindParam(':lastname', $lastname);
                     $stmt->bindParam(':email', $email);
                     $stmt->bindParam(':password', $password);
-                    $stmt->execute(); 
-        
-                    echo json_encode(['success' => true]);
-                } catch (Exception $e)
-                {
-                    echo json_encode(['success' => false, 'message' => 'Error creating user: ' . $e->getMessage()]); 
-                }
-                
-            }
-        }
-        else
-        {
-            echo json_encode(['success' => false, 'message' => 'Wrong verification code. Check if it is valid and not expired.']); 
-        }
+                    $stmt->execute();
 
+                    echo json_encode(['success' => true]);
+                } catch (Exception $e) {
+                    echo json_encode(['success' => false, 'message' => 'Error creating user: ' . $e->getMessage()]);
+                }
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Wrong verification code. Check if it is valid and not expired.']);
+        }
     }
 
 
 
-    private function getAccessInfo() {
-        
+    private function getAccessInfo()
+    {
+
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
         $dd = new DeviceDetector($userAgent);
         $dd->parse();
@@ -191,7 +179,7 @@ class User
         } else {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
-        
+
 
 
         $brandName = $dd->getBrandName();
@@ -227,13 +215,11 @@ class User
             $info = ["ip" => $ip, "device" => $device, "os" => $os, "client" => $client, "country" => "N/A", "region" => "N/A", "city" => "N/A", "isp" => "N/A", "as" => "N/A", "time" => $time];
 
         return $info;
-
     }
 
     private function registerLogin($id, $info)
     {
-        try
-        {
+        try {
             $sql = "INSERT INTO access_logs (user_id, ip, device, os, client, country, region, city, isp, as_, time) VALUES (:id, :ip, :device, :os, :client, :country,:region, :city, :isp, :as, :time)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':id', $id);
@@ -248,23 +234,19 @@ class User
             $stmt->bindParam(':as', $info['as']);
             $stmt->bindParam(':time', $info['time']);
             $stmt->execute();
-        } catch (Exception $e)
-        {
+        } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => 'Error writing logs on the Database: ' . $e->getMessage()]);
         }
     }
-    
+
     public function loginUser($username, $password)
     {
 
-        
-        if(session_status() == PHP_SESSION_NONE)
-        {
+        if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
 
         session_regenerate_id(true);
-
 
         $info = $this->getAccessInfo();
 
@@ -281,19 +263,25 @@ class User
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['user'] = [
-                    'id' => $user['id'],
-                    'username' => $user['username'],
-                    'firstname' => $user['firstname'],
-                    'lastname' => $user['lastname'],
-                    'email' => $user['email']
-                ];
-                
-                $this->email->sendLoginMail($user['email'], $info);
+                if ($user['active']) {
+                    $_SESSION['user'] = [
+                        'id' => $user['id'],
+                        'username' => $user['username'],
+                        'firstname' => $user['firstname'],
+                        'lastname' => $user['lastname'],
+                        'email' => $user['email']
+                    ];
+                    $this->email->sendLoginMail($user['email'], $info);
+    
+                    $this->registerLogin($user['id'], $info);
+    
+                    echo json_encode(['success' => true]);
+                }
+                else
+                {
+                    echo json_encode(['success' => false, 'message' => 'Account Deactivated.']);
+                }
 
-                $this->registerLogin($user['id'], $info);
-
-                echo json_encode(['success' => true]);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Invalid username or password.']);
             }
@@ -304,15 +292,12 @@ class User
 
     public function logoutUser()
     {
-        if(session_status() == PHP_SESSION_NONE) {
+        if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
         session_destroy();
         $_SESSION = [];
-
     }
-
-
 }
 
 
@@ -341,6 +326,3 @@ if ($data) {
 } else {
     echo json_encode(['success' => false, 'message' => 'No data received.']);
 }
-
-
-?>

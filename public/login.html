@@ -5,15 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkibidiChess :: Login</title>
-    <script src="../Backend/auth/js/script.js"></script>
     <link rel="stylesheet" href="../Style/output.css">
     <link rel="shortcut icon" href="../Assets/Images/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body class="bg-[#302E2B]">
+<body class="bg-[#302E2B] px-4 md:px-0">
     <script>
-
         function disableLoginBtn() {
             document.querySelector('#ButtonLogin').disabled = true;
             document.querySelector('#ButtonLogin').classList.remove('GreenBtn');
@@ -45,9 +43,7 @@
                 })
             });
 
-
             const data = await response.json();
-
 
             if (data.success) {
                 window.location.href = './index.php';
@@ -58,47 +54,51 @@
                 message.textContent = data.message;
                 enableLoginBtn();
             }
-
         }
     </script>
 
-    <img src="../Assets/Images/Logo.png" class="w-[400px] mb-[5vh] text-center mx-auto mt-24">
+    <div class="flex flex-col items-center justify-center min-h-screen py-8">
+        <img src="../Assets/Images/Logo.png" class="w-full max-w-[280px] md:max-w-[400px] mb-6 md:mb-8">
 
-    <form id="auth" class="w-[450px] mx-auto mt-[5px] pb-[30px] p-[20px] bg-[#1c1a19] rounded-[10px]"
-        onsubmit="event.preventDefault(); loginHandler();">
-        <p class="text-neutral-50 pb-1 pl-0.5">Username</p>
-        <input
-            class="mb-3 bg-[#22201e] px-4 py-3 outline-none w-[100%] text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#81b64c] border-[#1c1a19]"
-            name="user" placeholder="Enter your username" id="username" type="text" />
-        <p class="text-neutral-50 pb-1 pl-0.5">Password</p>
-        <div class="relative mb-3">
+        <form id="auth" class="w-full max-w-[320px] md:max-w-[450px] px-4 py-5 md:p-6 bg-[#1c1a19] rounded-lg md:rounded-xl shadow-lg"
+            onsubmit="event.preventDefault(); loginHandler();">
+            <p class="text-neutral-50 pb-1 pl-0.5">Username</p>
             <input
-                class="bg-[#22201e] px-4 py-3 outline-none w-[100%] text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#81b64c] border-[#1c1a19]"
-                name="psswd" placeholder="Enter your password" id="password" type="password" />
-            <span onclick="togglePasswordVisibility()"
-                style="position: absolute; top: 52%; right: 10px; transform: translateY(-50%); cursor: pointer;"><i
-                    class="fa fa-eye" style="font-size:24px;color: rgb(170, 170, 170); margin-right: 10px;"></i></span>
-        </div>
-        <script>
-            function togglePasswordVisibility() {
-                const pwd = document.getElementById('password');
-                pwd.type = pwd.type === 'password' ? 'text' : 'password';
-            }
-        </script>
-
-        <div role="alert" class="mt-1 mb-1" style="display: none;" id="error">
-            <div class="bg-orange-500 text-white font-bold rounded-t px-4 py-2">
-                Warning
+                class="mb-3 bg-[#22201e] px-3 py-2 md:px-4 md:py-3 outline-none w-full text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#81b64c] border-[#1c1a19]"
+                name="user" placeholder="Enter your username" id="username" type="text" />
+            
+            <p class="text-neutral-50 pb-1 pl-0.5">Password</p>
+            <div class="relative mb-3">
+                <input
+                    class="bg-[#22201e] px-3 py-2 md:px-4 md:py-3 outline-none w-full text-white rounded-lg border-2 transition-colors duration-100 border-solid focus:border-[#81b64c] border-[#1c1a19]"
+                    name="psswd" placeholder="Enter your password" id="password" type="password" />
+                <span onclick="togglePasswordVisibility()"
+                    class="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer">
+                    <i class="fa fa-eye text-gray-400 text-xl"></i>
+                </span>
             </div>
-            <div class="border border-t-0 border-orange-400 rounded-b bg-red-100 px-4 py-3 text-orange-700">
-                <p id="message">Insert valid credentials.</p>
+            
+            <script>
+                function togglePasswordVisibility() {
+                    const pwd = document.getElementById('password');
+                    pwd.type = pwd.type === 'password' ? 'text' : 'password';
+                }
+            </script>
+
+            <div role="alert" class="mt-1 mb-1" style="display: none;" id="error">
+                <div class="bg-orange-500 text-white font-bold rounded-t px-4 py-2 text-sm">
+                    Warning
+                </div>
+                <div class="border border-t-0 border-orange-400 rounded-b bg-red-100 px-4 py-3 text-orange-700 text-sm">
+                    <p id="message">Insert valid credentials.</p>
+                </div>
             </div>
-        </div>
 
-        <button id="ButtonLogin" type="submit" class="mt-1.5 GreenBtn w-[100%] h-[50px] text-[1vw]">Login</button>
-
-    </form>
-    <p class="text-gray-400 text-center mt-2 mb-10">Don't have an account yet? <u><a href="./register.html">Click here to register one.</a></u></p>
+            <button id="ButtonLogin" type="submit" class="mt-3 GreenBtn w-full h-10 md:h-12 text-base md:text-lg">Login</button>
+        </form>
+        
+        <p class="text-gray-400 text-center mt-4 text-sm md:text-base">Don't have an account yet? <u><a href="./register.html">Click here to register one.</a></u></p>
+    </div>
 </body>
 
 </html>
