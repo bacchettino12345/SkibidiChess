@@ -2,7 +2,7 @@ import { Game } from "../Game.js"
 import {AI, Local} from "../Player.js"
 import { callAPI } from "../../../../Backend/game/js/Stockfish.js"
 import { gameMode } from "./GameMode.js"
-import { gameState } from "../GameInfo.js"
+
 
 export class SinglePlayer extends gameMode
 {
@@ -13,7 +13,6 @@ export class SinglePlayer extends gameMode
         this.p1 = new Local(this.localColor)
         this.p2 = new AI(this.otherColor)
 
-        gameState.playerColor = this.localColor
         this.game = new Game(this.p1, this.p2)
 
         this.virtualBoard.AIstrength = difficulty * 3

@@ -2,7 +2,6 @@ import { Helper } from "../game/Helpers.js";
 import { AnimationMenager } from "../game/AnimationMenager.js";
 import { SimpleAnimation } from "../game/simpleAnimation.js";
 import { bus } from "./Bus.js";
-import { gameState } from "./GameInfo.js";
 
 export class PhysicalBoard
 {
@@ -100,7 +99,7 @@ export class PhysicalBoard
         }
         else
         {
-            if(this.virtualBoard.canPieceMove(this.selectedSquare, clickedSquare) && (gameState.GameMode === "singlePlayer" || gameState.turn === gameState.playerColor))
+            if(this.virtualBoard.canPieceMove(this.selectedSquare, clickedSquare) )
             {
 
                 const piece = this.virtualBoard.getPieceAt(this.selectedSquare)

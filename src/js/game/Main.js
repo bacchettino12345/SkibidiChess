@@ -1,6 +1,5 @@
 import { AIWager } from "./GameModes/AIvsAI.js";
 import { SinglePlayer } from "./GameModes/SinglePlayer.js";
-import { gameState } from "./GameInfo.js";
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -23,7 +22,6 @@ let gameMode = new SinglePlayer(Localcolor, settings.difficulty)
 
 gameMode.runGame()
 
-gameState.GameMode = "singlePlayer"
 
 
 window.promote = function(type) {
