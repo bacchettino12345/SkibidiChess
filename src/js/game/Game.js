@@ -1,3 +1,4 @@
+import { gameState } from "./GameInfo.js"
 
     export class Game
     {
@@ -22,12 +23,13 @@
         {
             while(!this.gameOver)
             {
-                const currentPlayer = this.players[this.currentTurn]
+                const currentPlayer = await this.players[this.currentTurn]
                 const move = await currentPlayer.playTurn()
 
                 if(move)
                 {
                     this.switchTurn()
+                    gameState.turn = this.currentTurn
                 }
             }
         }
