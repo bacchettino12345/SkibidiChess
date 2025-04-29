@@ -163,7 +163,7 @@ export class VirtualBoard{
     async requestNextMove(color = "white")
     {
         const response = await callAPI(this.CurrentFEN + " " + color[0] +  " - - 0 1", this.AIstrength)
-            
+        
         let moves = response[0].split("")
         let fileFrom = moves[0].charCodeAt(0) - 97
         let fileTo = moves[2].charCodeAt(0) - 97
@@ -183,8 +183,6 @@ export class VirtualBoard{
         bus.emit("move", startPos, finalPos)
 
         this.physicalBoard.RenderBoard()
-        
-   
     }
 
     promotion(type)

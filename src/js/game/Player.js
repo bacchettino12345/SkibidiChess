@@ -65,7 +65,36 @@ export class AI extends player{
             bus.emit("moveAI", this.color)
         })
     }
-
-    
-
 }
+
+
+
+
+export class Online extends player{
+
+    constructor(color)
+    {
+        super(color)
+        this.resolveMove = null
+    }
+
+    async playTurn()
+    {
+        return new Promise((promise) => {
+            this.resolveMove = promise;
+
+            bus.once("move", (start, target) => {
+
+                if(this.resolveMove)    
+                {
+                    this.resolveMove({start, target})
+                    this.resolveMove = null
+                }
+            })
+
+            bus.emit("moveAI", this.color)
+        })
+    }
+}
+
+
