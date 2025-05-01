@@ -21,7 +21,7 @@ A modern chess game built with **HTML, Tailwind CSS, JavaScript, and PHP**, feat
 ✅ **Fully Responsive** 📱 – Play on desktop, phone, or even *in the toilet* 🚽  
 
 
-## 🚀 **Roadmap** (*Meme Edition*)  
+## 🚀 **Roadmap**
 🔜 **Online Multiplayer** – Challenge other Skibidi enjoyers in real-time  
 🔜 **Emote Chat** 💬 – Spam 🗿🍷 or "GG" mid-game  
 🔜 **Skibidi Sound Pack** 🔊 – *Ohio "rizz" update incoming*  
