@@ -1,39 +1,37 @@
-# ♟️ SkibidiChess 🚽 
+# ♟️ SkibidiChess 🚽🎶  
 
-**"Se gli scacchi fossero un meme, sarebbero questo!"**  
-
-Un gioco di scacchi **HTML + Tailwind CSS + JS + PHP** con:  
-- Singleplayer 🤖 (per ora... ma presto 👀)  
-- Sistema di account 🧑‍💻 (preparati al **MULTIPLAYER EPICO!**)  
-- **100% Skibidi-approved** ✅  
+A modern chess game built with **HTML, Tailwind CSS, JavaScript, and PHP**, featuring:  
+- Singleplayer vs. AI 🤖 (*for now... multiplayer coming soon!*)  
+- Account system 🧑‍💻 (*ready for future online battles*)  
+- **100% Skibidi-approved** ✅ (*meme magic included*)  
 
 ---
 
-## 🎮 **Come Giocare**  
-1. **Registrati** (così poi potrai flexare il tuo ELO quando uscirà il multiplayer)  
-2. **Scegli il lato della forza**:  
-   - Bianco 😇  
-   - Nero 😈  
-3. **Distruggi l'AI** (o fatti distruggere, no shame)  
+## 🎮 **How to Play**  
+1. **Sign up** (*flex your future ELO when multiplayer drops*)  
+2. **Pick your side**:  
+   - White 😇 
+   - Nigga 😈
+3. **Crush the AI** (*or get crushed—no shame in the game*)  
 
 ---
 
 ## 🔥 **Features**  
-✅ **Skibidi Theme** – *yes, the rizz is real*  
-✅ **SinglePlayer VS Stockfish con diversi livelli** – *yes, the rizz is real*  
-✅ **Responsive** 📱 (gioca anche mentre sei in 🚽)  
+✅ **Skibidi Theme** – *Because why not?*  
+✅ **SinglePlayer vs. Stockfish** – Multiple difficulty levels (*easy to "I need therapy"*)  
+✅ **Fully Responsive** 📱 – Play on desktop, phone, or even *in the toilet* 🚽  
 
 ---
 
-## � **Roadmap (Skibidi-pilled edition)**  
-🔜 **MULTIPLAYER** – Sfida gli altri Skibidi enjoyers in diretta  
-🔜 **Emote chat** 💬 (🗿🍷, GG, ecc.)  
-🔜 **Skibidi sound effects** 🔊 (*OHIO RIZZ UPDATE*)  
+## 🚀 **Roadmap** (*Meme Edition*)  
+🔜 **Online Multiplayer** – Challenge other Skibidi enjoyers in real-time  
+🔜 **Emote Chat** 💬 – Spam 🗿🍷 or "GG" mid-game  
+🔜 **Skibidi Sound Pack** 🔊 – *Ohio "rizz" update incoming*  
 
 ---
 
-## 🛠️ SelfHosting  
-1. **Clona sto capolavoro**:  
+## 🛠️ **Self-Hosting**  
+1. **Clone the masterpiece**:  
    ```bash
-   git clone https://github.com/tuo-username/SkibidiChess.git
+   git clone https://github.com/your-username/SkibidiChess.git
    cd SkibidiChess
