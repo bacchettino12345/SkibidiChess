@@ -1,6 +1,5 @@
 # ♟️ SkibidiChess 🚽
 
----
 
 A modern chess game built with **HTML, Tailwind CSS, JavaScript, and PHP**, featuring:  
 - Singleplayer vs. AI 🤖 (*for now... multiplayer coming soon!*)  
