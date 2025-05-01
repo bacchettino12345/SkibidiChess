@@ -1,4 +1,4 @@
-# ♟️ SkibidiChess 🚽🎶  
+# ♟️ SkibidiChess 🚽 
 
 **"Se gli scacchi fossero un meme, sarebbero questo!"**  
 
