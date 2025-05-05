@@ -103,6 +103,10 @@
     }
 
 
+    .Widget
+    {
+        backdrop-filter: brightness(0.15);
+    }
 
 
 

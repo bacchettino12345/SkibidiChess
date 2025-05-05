@@ -266,7 +266,7 @@ else if (!$sessionChecker->checkAdmin())
     <a href="./index.php" class="text-white block mt-4"><i>&lt;&lt; Back to Index</i></a>
 
     <!-- User Action Panel (initially hidden) -->
-    <div id="userActionPanel" class="fixed inset-0 flex Banner items-center justify-center z-50 hidden">
+    <div id="userActionPanel" class="fixed inset-0 flex Banner items-center justify-center z-50 hidden Widget">
         <div class="bg-[#1c1a19] text-white p-5 pb-7 rounded-lg w-full max-w-md mx-4">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold">User Actions: <span id="actionPanelUsername" class="font-normal"></span></h2>
