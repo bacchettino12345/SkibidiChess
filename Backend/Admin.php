@@ -9,6 +9,7 @@ require_once __DIR__ . '/SessionChecker.php';
 use PDO;
 use PDOException;
 
+
 class Admin
 {
     private $conn;
