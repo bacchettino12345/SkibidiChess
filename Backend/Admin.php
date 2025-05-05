@@ -32,21 +32,24 @@ class Admin
     }
 
 
-    public function userSearch($username)
+    public function userSearch($search)
     {
-        if (empty($username) || strlen($username) < 3) {
+        if (empty($search) || strlen($search) < 3) {
             echo json_encode(['success' => false, 'message' => 'Username search term must be at least 3 characters']);
             return;
-        }
+        }   
 
         try {
             $sql = "SELECT id, username, firstname, lastname, email, active, admin, pts
                     FROM accounts a
-                    WHERE username LIKE :username
+                    WHERE username LIKE :query
+                    OR firstname LIKE :query
+                    OR lastname LIKE :query
+                    OR email LIKE :query
                     LIMIT 500";
             $stmt = $this->conn->prepare($sql);
-            $searchUsername = "%$username%";
-            $stmt->bindParam(':username', $searchUsername, PDO::PARAM_STR);
+            $searchTerm = "%$search%";
+            $stmt->bindParam(':query', $searchTerm, PDO::PARAM_STR);
             $stmt->execute();
 
             echo json_encode([
@@ -114,8 +117,7 @@ class Admin
             echo json_encode(['success' => false, 'message' => 'Username search term must be at least 3 characters']);
             return;
         }
-        if(!$this->checkUserExistance($username))
-        {
+        if (!$this->checkUserExistance($username)) {
             echo json_encode(['success' => false, 'message' => 'User does not exists on the DB']);
             return;
         }
@@ -135,7 +137,6 @@ class Admin
         } catch (PDOException $e) {
             echo json_encode(['success' => false, 'message' => 'Database error']);
         }
-        
     }
 
     public function setAdmin($username, $perm)
@@ -144,8 +145,7 @@ class Admin
             echo json_encode(['success' => false, 'message' => 'Username search term must be at least 3 characters']);
             return;
         }
-        if(!$this->checkUserExistance($username))
-        {
+        if (!$this->checkUserExistance($username)) {
             echo json_encode(['success' => false, 'message' => 'User does not exists on the DB']);
             return;
         }
@@ -165,7 +165,6 @@ class Admin
         } catch (PDOException $e) {
             echo json_encode(['success' => false, 'message' => 'Database error']);
         }
-        
     }
 
     public function setActive($username, $act)
@@ -174,8 +173,7 @@ class Admin
             echo json_encode(['success' => false, 'message' => 'Username search term must be at least 3 characters']);
             return;
         }
-        if(!$this->checkUserExistance($username))
-        {
+        if (!$this->checkUserExistance($username)) {
             echo json_encode(['success' => false, 'message' => 'User does not exists on the DB']);
             return;
         }
@@ -195,17 +193,15 @@ class Admin
         } catch (PDOException $e) {
             echo json_encode(['success' => false, 'message' => 'Database error']);
         }
-        
     }
-    
+
     public function changeUsername($username, $newUsername)
     {
         if (empty($username) || strlen($username) < 3) {
             echo json_encode(['success' => false, 'message' => 'Username search term must be at least 3 characters']);
             return;
         }
-        if(!$this->checkUserExistance($username))
-        {
+        if (!$this->checkUserExistance($username)) {
             echo json_encode(['success' => false, 'message' => 'User does not exists on the DB']);
             return;
         }
@@ -224,7 +220,6 @@ class Admin
         } catch (PDOException $e) {
             echo json_encode(['success' => false, 'message' => 'Database error']);
         }
-        
     }
 
     public function changePassword($username, $newPassword)
@@ -233,8 +228,7 @@ class Admin
             echo json_encode(['success' => false, 'message' => 'Username search term must be at least 3 characters']);
             return;
         }
-        if(!$this->checkUserExistance($username))
-        {
+        if (!$this->checkUserExistance($username)) {
             echo json_encode(['success' => false, 'message' => 'User does not exists on the DB']);
             return;
         }
@@ -255,7 +249,6 @@ class Admin
         } catch (PDOException $e) {
             echo json_encode(['success' => false, 'message' => 'Database error']);
         }
-        
     }
 
     public function deleteUser($username)
@@ -264,8 +257,7 @@ class Admin
             echo json_encode(['success' => false, 'message' => 'Username search term must be at least 3 characters']);
             return;
         }
-        if(!$this->checkUserExistance($username))
-        {
+        if (!$this->checkUserExistance($username)) {
             echo json_encode(['success' => false, 'message' => 'User does not exists on the DB']);
             return;
         }
@@ -286,9 +278,7 @@ class Admin
         } catch (PDOException $e) {
             echo json_encode(['success' => false, 'message' => 'Database error']);
         }
-        
     }
-
 }
 
 
@@ -299,9 +289,8 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 $sessionChecker = new SessionChecker();
 
-if($sessionChecker->checkSession())
-    if($sessionChecker->checkAdmin())
-    {
+if ($sessionChecker->checkSession())
+    if ($sessionChecker->checkAdmin()) {
         $admin = new Admin();
         switch ($data['action']) {
             case 'getAccessLogsForUser':
@@ -329,6 +318,5 @@ if($sessionChecker->checkSession())
                 echo json_encode(['success' => false, 'message' => 'Invalid action.']);
                 break;
         }
-    }
-else
-    echo json_encode(['success' => false, 'message' => 'Auth error.']);
+    } else
+        echo json_encode(['success' => false, 'message' => 'Auth error.']);

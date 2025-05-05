@@ -104,7 +104,7 @@
             const data = await response.json();
 
             if (data.success) {
-                window.location.href = 'AccountCreatedRedirect.html';
+                window.location.href = './accountCreatedRedirect.html';
             } else {
                 enableVerifyBtn();
                 const errorBanner = document.getElementById("creationError");
